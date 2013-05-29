@@ -1,0 +1,40 @@
+---
+layout: test
+---
+<script type="text/javascript" src="js/require_conf.js"></script>
+<script type="text/javascript" src="js/require.js" data-main="index.js"></script>
+<div class="expansionContainer is-shrinked">
+  <div class="main">
+    <section class="volume" id="vol_startguide">
+      <article>
+        <h3 class="rawentry" data-link="leaderboard-code.html" data-doctype="startguide">見本1 - 順位表</h3>
+        <h3 class="rawentry" data-link="leaderboard-code.html" data-doctype="startguide">見本2 - パーティー</h3>
+        <h3 class="rawentry" data-link="leaderboard-code.html" data-doctype="startguide">見本3 - パーティー</h3>
+        <h3 class="rawentry" data-link="leaderboard-code.html" data-doctype="startguide">見本4 - Backboneテスト</h3>
+      </article>
+    </section>
+    <section class="volume" id="vol_apireference">
+      <article>
+        <div class="content">
+        </div>
+      </article>
+    <section class="volume" id="vol_reverse">
+      <article>
+        <div class="content">
+        </div>
+      </article>
+    </section>
+  </div>
+  <div class="sub">
+  </div>
+</div><!-- end of expansionContainer -->
+<script id="entryTemplate" type="text/x-underscore-template">
+  <div class="entry template is-shrinked" id="<%= id %>" data-appear-top-offset="300">
+    <h3 class="title"><a class="doExpand"><%= title %><i class="icon-resize-full"></i></a></h3>
+    <div class="permalink">
+      <a href="/doc/<%= hrefPermaLink %>">このページへのリンク</a>
+    </div>
+    <div class="content">
+    </div>
+  </div>
+</script>

@@ -1,0 +1,82 @@
+.volume-selector {
+	@border-color: rgb(160, 160, 160);
+
+	@media (min-width: @responsive-solid-min) {
+		width: 100%;
+	}
+
+	@media (max-width: @responsive-fluid-max) {
+		overflow: scroll;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	border-width: 1px 0 0 0;
+	border-style: dashed;
+	border-color: @border-color;
+
+	ul{
+		margin: 0 auto;
+
+		list-style-type: none;
+		list-style-position: none;
+
+		text-align: center;
+
+		white-space: nowrap;
+
+		li{
+			//@media (min-width: @responsive-solid-min) {
+				border-width: 0 0 0 1px;
+				border-style: dashed;
+				border-color: @border-color;
+			//}
+			
+			display: inline-block;
+			padding: 6px;
+
+			a{
+				color: rgb(43, 60, 72);
+				text-shadow: none;
+				font-weight: bold;
+				font-size: 13pt;
+			}
+		}
+		li:first-child{
+			border-width: 0;
+		}
+
+	}
+}
+.content{
+	@media (max-width: @responsive-fluid-max) {
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	@media (min-width: @responsive-solid-min) {
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+
+
+}
+
+.entry{
+	line-height: 135%;
+
+	margin-top: 10px;
+	margin-bottom: 10px;
+
+	h3 {
+		line-height: 100%;
+	}
+	.particleContent{
+		font-size: 80%;
+		line-height: 115%;
+
+		color:rgb(120, 120, 120);
+
+		overflow: hidden;
+		white-space: pre;
+	}
+}

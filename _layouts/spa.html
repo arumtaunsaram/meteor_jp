@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" href="{{ site.url }}/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="{{ site.url }}/css/bootstrap-responsive.min.css" />
+  <link rel="stylesheet" href="{{ site.url }}/css/styles.css" />
+  <link rel="stylesheet" href="{{ site.url }}/css/coderay.css" />
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="{{ site.url }}/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ site.url }}/js/require_conf.js"></script>
+  <script type="text/javascript" src="{{ site.url }}/js/require.js" data-main="index.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner container">
+      <h1 class="text-center">
+        <a href="{{ site.url }}/">
+          <span>{{site.title}}</span>
+        </a>
+      </h1>
+      <div class="volume-selector">
+        <ul>
+          <li
+			><a href="{{ site.url }}/index.html" id="volumeSelector_index">トップ</a></li><li
+			><a href="{{ site.url }}/apiref.html" id="volumeSelector_apiref">クラス別索引</a></li><li
+			><a href="{{ site.url }}/reverseref.html" id="volumeSelector_reverseref">逆引き索引</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="fluidContent">
+    {{ content }}
+  </div>
+  <div class="content" id="solidContent">
+    <!-- Contents loaded every time go here -->
+    {% include index.html %}
+    {% include reverseref.html %}
+    {% include about_meteor.html %}
+    {% include about_meteor_kaiso.html %}
+  </div>
+  <div class="content" id="footer">
+    {% include footer.html %}
+  </div>
+</div>
+<script id="entryTemplate" type="text/x-underscore-template">
+  <div class="entry template is-shrinked" id="<%= id %>" data-appear-top-offset="300">
+    <h3 class="title"><a class="doExpand" href="{{ site.url }}/<%= hrefPermaLink %>"><%= title %></a></h3>
+    <div class="particleContent">
+      読み込み中..
+    </div>
+  </div>
+</script>
+{% include analytics.html %}
+</body>
+</html>

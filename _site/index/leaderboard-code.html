@@ -1,0 +1,319 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meteor Kaiso - サンプルアプリケーション: 順位表</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-responsive.min.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/coderay.css" />
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/js/require_conf.js"></script>
+  <script type="text/javascript" src="/js/require.js" data-main="index.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner container">
+      <h1 class="text-center">
+        <a href="/">
+          <span>Meteor Kaiso</span>
+        </a>
+      </h1>
+      <div class="volume-selector">
+        <ul>
+          <li
+			><a href="/index.html" id="volumeSelector_index">トップ</a></li><li
+			><a href="/apiref.html" id="volumeSelector_apiref">クラス別索引</a></li><li
+			><a href="/reverseref.html" id="volumeSelector_reverseref">逆引き索引</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="fluidContent">
+    <style type="text/css">
+#fluidContent{
+	display: block;
+}
+</style>
+<div id="entryCore">
+      <h2 id="section">直接体験</h2>
+
+<ul>
+  <li>(もしまだならば) Meteor のインストール</li>
+</ul>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>$ curl https://install.meteor.com | sh
+</pre></div>
+</div>
+</div>
+
+<ul>
+  <li>サンプルアプリケーション一式のコピー</li>
+</ul>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>$ meteor create --example leaderboard
+</pre></div>
+</div>
+</div>
+
+<ul>
+  <li>サンプルアプリケーションの起動</li>
+</ul>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>$ cd leaderboard
+$ meteor
+</pre></div>
+</div>
+</div>
+
+<ul>
+  <li>サンプルアプリケーションへアクセス
+ブラウザより <a href="http://localhost:3000/">http://localhost:3000/</a> にアクセス</li>
+</ul>
+
+<p class="lead">
+[オフィシャルサイト](http://meteor.com/examples/leaderboard) ではさらにアプリケーション公開用の
+デプロイ用の環境が提供されています。
+</p>
+
+<h2 id="section-1">ファイル構成</h2>
+
+<p><a name="hierarchy"></a></p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>.
+├── leaderboard.css
+├── leaderboard.html
+└── leaderboard.js
+</pre></div>
+</div>
+</div>
+
+<h3 id="leaderboardhtml">leaderboard.html</h3>
+
+<p>2つの <a href="http://handlebarsjs.com/">Handlebars</a> テンプレートより構成されています。
+<a href="/apiref/template-object.html">Template オブジェクト</a></p>
+
+<h3 id="leaderboardjs">leaderboard.js</h3>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>Players = <span style="color:#080;font-weight:bold">new</span> Meteor.Collection(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">players</span><span style="color:#710">&quot;</span></span>);
+</pre></div>
+</div>
+</div>
+
+<p>プレーヤとその成績が保存された MongoDBの Collection を<code>Players</code>変数にキャストします。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> (Meteor.isClient) {
+  Template.leaderboard.<span style="color:#06B;font-weight:bold">players</span> = <span style="color:#080;font-weight:bold">function</span> () {
+    <span style="color:#080;font-weight:bold">return</span> Players.find({}, {<span style="color:#606">sort</span>: {<span style="color:#606">score</span>: -<span style="color:#00D">1</span>, <span style="color:#606">name</span>: <span style="color:#00D">1</span>}});
+  };
+</pre></div>
+</div>
+</div>
+
+<p>Template の ヘルパー関数(JavaScriptのデータをテンプレートに渡す機能を担います)。データベースにプレーヤを取得するクエリを発行します。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>  Template.leaderboard.<span style="color:#06B;font-weight:bold">selected_name</span> = <span style="color:#080;font-weight:bold">function</span> () {
+    <span style="color:#080;font-weight:bold">var</span> player = Players.findOne(Session.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">selected_player</span><span style="color:#710">&quot;</span></span>));
+    <span style="color:#080;font-weight:bold">return</span> player &amp;&amp; player.name;
+  };
+</pre></div>
+</div>
+</div>
+
+<p>Template の ヘルパー関数。現在選択されているプレーヤの名前を返却します。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>  Template.player.<span style="color:#06B;font-weight:bold">selected</span> = <span style="color:#080;font-weight:bold">function</span> () {
+    <span style="color:#080;font-weight:bold">return</span> Session.equals(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">selected_player</span><span style="color:#710">&quot;</span></span>, <span style="color:#963">this</span>._id) ? <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">selected</span><span style="color:#710">&quot;</span></span> : <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>;
+  };
+</pre></div>
+</div>
+</div>
+
+<p>Template の ヘルパー関数。プレーヤが選択されているかどうかを返し、CSSを使いハイライトを行うことに利用されます。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>  Template.leaderboard.events({
+    <span style="color:#606"><span style="color:#404">'</span><span>click input.inc</span><span style="color:#404">'</span></span>: <span style="color:#080;font-weight:bold">function</span> () {
+      Players.update(Session.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">selected_player</span><span style="color:#710">&quot;</span></span>), {<span style="color:#369;font-weight:bold">$inc</span>: {<span style="color:#606">score</span>: <span style="color:#00D">5</span>}});
+    }
+  });
+</pre></div>
+</div>
+</div>
+
+<p>イベントハンドラ。現在選択されているプレーヤを設定します。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>  Template.player.events({
+    <span style="color:#606"><span style="color:#404">'</span><span>click</span><span style="color:#404">'</span></span>: <span style="color:#080;font-weight:bold">function</span> () {
+      Session.set(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">selected_player</span><span style="color:#710">&quot;</span></span>, <span style="color:#963">this</span>._id);
+    }
+  });
+</pre></div>
+</div>
+</div>
+
+<p><code>selected_player</code> はセション変数で現在選択されているプレーヤの MongoDB のドキュメントidを保存します。
+leaderboard.js には3箇所の<code>selected_player</code>を読み込む箇所と、1箇所の書き込みを行う場所があります。
+<code>Template.plauer.events</code> 関数はイベントハンドラです。&#8221;give points&#8221; ボタンに対応します。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>
+}
+
+<span style="color:#777">// サーバ起動時, データベースが空であればプレーヤを作成する</span>
+<span style="color:#080;font-weight:bold">if</span> (Meteor.isServer) {
+  Meteor.startup(<span style="color:#080;font-weight:bold">function</span> () {
+    <span style="color:#080;font-weight:bold">if</span> (Players.find().count() === <span style="color:#00D">0</span>) {
+      <span style="color:#080;font-weight:bold">var</span> names = [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Ada Lovelace</span><span style="color:#710">&quot;</span></span>,
+                   <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Grace Hopper</span><span style="color:#710">&quot;</span></span>,
+                   <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Marie Curie</span><span style="color:#710">&quot;</span></span>,
+                   <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Carl Friedrich Gauss</span><span style="color:#710">&quot;</span></span>,
+                   <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Nikola Tesla</span><span style="color:#710">&quot;</span></span>,
+                   <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Claude Shannon</span><span style="color:#710">&quot;</span></span>];
+      <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">var</span> i = <span style="color:#00D">0</span>; i &lt; names.length; i++)
+        Players.insert({<span style="color:#606">name</span>: names[i], <span style="color:#606">score</span>: Math.floor(Math.random()*<span style="color:#00D">10</span>)*<span style="color:#00D">5</span>});
+    }
+  });
+</pre></div>
+</div>
+</div>
+
+<p>データベースにデフォルトデータを挿入します。アプリケーション起動時にデータベースが空であるときに実行されます。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre>}
+</pre></div>
+</div>
+</div>
+
+</div>
+
+  </div>
+  <div class="content" id="solidContent">
+    <!-- Contents loaded every time go here -->
+    <article class="solidArticle" id="solidArticle_index">
+  <p>Meteor Kaiso は Meteor を使った開発の際に役立つナレッジを紹介します。Meteor については「<a href="about_meteor.html">Meteorとは</a>」をご参照ください。
+  </p>
+  <h2>Meteor のインストール</h2>
+  <h2>サンプルコードから学ぶ Meteor アプリ</h2>
+  <div class="content">
+    <h3 class="rawentry" data-link="leaderboard-code.html" data-doctype="index">サンプル1 - 順位表</h3>
+  </div>
+  <h2>白熱のページ</h2>
+  <dl>
+    <dt><a href="http://stephenwalther.com/archive/2013/03/18/an-introduction-to-meteor.aspx">An Introduction to Meteor</a></dt> 
+  	<dd>Meteor の導入, プラクティスを詳しく解説。スクリーンショット付きで Windows 環境でのケースが紹介されているので参考になる部分が多いかと思われます。公開環境にデプロイする際の心がけについても解説</dd>
+  	
+    <dt><a href="http://www.ripariandata.com/blog/real-time-multiuser-drawing-with-meteor">How to Build Your First Meteor App and Discover Your Inner Artist — Riparian Data</a></dt>
+  	<dd>Boston Meteor Meetup group にてデモに使用された Meteor と Canvas (と d3js) を使ったマルチプレーヤで同時に絵を描くアプリケーションの解説</dd>
+    <dt><a href="https://github.com/oortcloud/unofficial-meteor-faq">Unofficial Meteor FAQ</a></dt>
+  	<dd>Meteor のカスタマイズ方法や Meteor でアプリケーションを作成する際のディレクトリ構造など、公式サイトでは紹介されていないディープな情報。Meteor のブラウザサポート状況についても軽く触れられています</dd>
+    <dt><a href="http://www.discovermeteor.com/">Discover Meteor - Learn how to build real-time JavaScript web apps</a><dt>
+  	<dd>実際の Meteor 利用シーンを想定した複数のサンプルから構成される Meteor のチュートリアル(一部を除き有償, 複数プランあり)</dd>
+    <dt><a href="http://www.skalb.com/2012/08/19/testing-with-meteor-coffeescript-and-mocha/">Testing With Meteor, CoffeeScript and Mocha</a></dt>
+  	<dd>Mocha, CoffeeScript を使ったMeteorのテスト方法</dd>
+    <dt><a href="http://www.lshift.net/blog/2013/02/25/live-updates-to-meteor-from-postgres">Live updates to Meteor from Postgres</a></dt>
+  	<dd>Postgre SQL を Meteor で利用する方法(MongoDB経由)</dd>
+    <dt><a href="http://telesc.pe/">Telescope</a></dt>
+  	<dd>Meteor で作られたソーシャルニュースサイト</dd>
+    <dt><a href="http://blog.nitrous.io/2013/02/21/build-meteor-apps-in-the-browser-with-actionio-and-mongolab.html">Build Meteor apps in the browser with Action.IO and MongoLab</a></dt>
+  	<dd>WebIDE と MongoLab (Mongo DBのデータベースを提供する PaaS環境)を使ったクラウドのみで開発からデプロイまでを完結させる手法の解説</dd>
+    <dt><a href="http://www.infoq.com/news/2013/05/nobackend">NoBackend: Front-End First Web Development</a></dt>
+  	<dd>もう一つのサーバサイド抽象化の流れ</dd>
+    <dt><a href="http://www.kinvey.com/blog/121/the-backend-as-a-service-ecosystem-map-update-amp-new-trends-migration-toward-the-middle">The Backend as a Service Ecosystem Map Update & New Trends: Migration Toward the Middle</a></dt>
+  	<dd>Kinvey による Baas(Backend as a Service) Map。Meteor は Parse (2013年4月に Facebook により買収) の直下に描かれています</dd>
+  </dl>
+</article>
+
+    <article class="solidArticle" id="solidArticle_reverseref">
+逆引き
+</article>
+
+    <article class="solidArticle" id="solidArticle_about_meteor">
+<p>Meteor は Node.js, Mongo DB*を使い、サーバサイド, クライアントサイドすべてのコードを JavaScript で書き上げることを可能としたフレームワークです。データ同期に必要な複雑な処理をフレームワークに委ね、JavaScript のみで素早くリアルタイムウェブが開発できます。<br />
+  *SQLのサポートは Meteor Version 1.0 以降での実装が検討されています。
+<h2>コンセプト</h2>
+<ul>
+  <li>そのままのJavaScript</li>
+  <li>ページのデータはリアルタイムに更新</li>
+  <li>簡潔かつ強力なデータ同期</li>
+  <li>遅延の補正</li>
+  <li>コードの即時置換</li>
+  <li>影響が大きいコードは特権環境で実行</li>
+  <li>ホスティングサービスに依存しないアプリケーション定義</li>
+  <li>跨オペレーション対応性</li>
+  <li>Meteor as スマートパッケージ</li>
+</ul>
+<h2>ロードマップ</h2>
+<p>実装予定の機能は開発チームにより下掲サイトにまとめられています。機能のリリーススケジュールなどを伴わない簡略的なもので、機能について予告なく変更が加えられることがあります。<br />
+  <a href="http://roadmap.meteor.com/">http://roadmap.meteor.com/</a><br>
+(公式サイトでのロードマップについてのアナウンス:<br><a href="http://meteor.com/faq/does-meteor-have-a-roadmap">http://meteor.com/faq/does-meteor-have-a-roadmap</a>)
+</p>
+</article>
+
+    <article class="solidArticle" id="solidArticle_about_meteor_kaiso">
+Meteor Kaiso(<a href="http://www.amazon.co.jp/s/?field-keywords=%E8%88%8E%E5%AF%86%E9%96%8B%E5%AE%97">開宗</a>) は Meteor を使った開発の際に役立つナレッジを紹介するサイトです。Meteor開発チームよりドキュメント翻訳の許可は頂いておりますが、記載されている内容は基本的に非公式でまた最新でない場合がありますのでご了承ください。
+<a name="authors"></a>
+<h3>参加者</h3>
+Meteor を使った開発に興味を持つ有志より成り立っております。翻訳したドキュメントをお寄せいただける場合は github よりプルリクエストを頂ければ幸いです。
+<ul>
+  <li>Yuki Kumazawa</li>
+  <li>あなたの名前をここに追記</li>
+</ul>
+</article>
+
+  </div>
+  <div class="content" id="footer">
+    <footer class="text-center">
+<hr />
+<p>
+  <a href="https://github.com/mojombo/jekyll/">Jekyll</a> により生成,
+  <a href="https://pages.github.com/">GitHub Pages</a> にて運営<br>
+</p>
+<p>※本ドキュメントは非公式で、<a href="/about_meteor_kaiso.html#authors">Meteor 開発チームと関係を持たない有志</a>によって記載されています。</p>
+</footer>
+
+  </div>
+</div>
+<script id="entryTemplate" type="text/x-underscore-template">
+  <div class="entry template is-shrinked" id="<%= id %>" data-appear-top-offset="300">
+    <h3 class="title"><a class="doExpand" href="/<%= hrefPermaLink %>"><%= title %></a></h3>
+    <div class="particleContent">
+      読み込み中..
+    </div>
+  </div>
+</script>
+
+  <!-- Gauges (http://gaug.es/) -->
+  <script type="text/javascript">
+    var _gauges = _gauges || [];
+    (function() {
+      var t   = document.createElement('script');
+      t.type  = 'text/javascript';
+      t.async = true;
+      t.id    = 'gauges-tracker';
+      t.setAttribute('data-site-id', '503c5af6613f5d0f19000027');
+      t.src = '//secure.gaug.es/track.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(t, s);
+    })();
+  </script>
+
+
+
+
+</body>
+</html>
