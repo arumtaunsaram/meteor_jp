@@ -1,6 +1,11 @@
 permalink: none
 title: Meteor Kaiso
+safe: true
+lsi: false
 markdown: kramdown
+
+url: http://arumtaunsaram.github.io/meteor_jp
+
 kramdown:
   use_coderay: true
 
