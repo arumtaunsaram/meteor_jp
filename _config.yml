@@ -2,14 +2,11 @@ permalink: none
 title: Meteor Kaiso
 safe: true
 lsi: false
-markdown: kramdown
+markdown: redcarpet2
+pygments: true
+redcarpet:
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
 
 url: http://arumtaunsaram.github.io/meteor_jp
-
-kramdown:
-  use_coderay: true
-
-  coderay:
-    coderay_line_numbers: nil
 
 gauges_id: 503c5af6613f5d0f19000027

@@ -54,13 +54,13 @@ $ meteor
 
 ### leaderboard.js
 
-~~~ java_script
+~~~ javascript
 Players = new Meteor.Collection("players");
 ~~~
 
 プレーヤとその成績が保存された MongoDBの Collection を`Players`変数にキャストします。
 
-~~~ java_script
+~~~ javascript
 if (Meteor.isClient) {
   Template.leaderboard.players = function () {
     return Players.find({}, {sort: {score: -1, name: 1}});
@@ -69,7 +69,7 @@ if (Meteor.isClient) {
 
 Template の ヘルパー関数(JavaScriptのデータをテンプレートに渡す機能を担います)。データベースにプレーヤを取得するクエリを発行します。
 
-~~~ java_script
+~~~ javascript
   Template.leaderboard.selected_name = function () {
     var player = Players.findOne(Session.get("selected_player"));
     return player && player.name;
@@ -78,7 +78,7 @@ Template の ヘルパー関数(JavaScriptのデータをテンプレートに�
 
 Template の ヘルパー関数。現在選択されているプレーヤの名前を返却します。
 
-~~~ java_script
+~~~ javascript
   Template.player.selected = function () {
     return Session.equals("selected_player", this._id) ? "selected" : '';
   };
@@ -86,7 +86,7 @@ Template の ヘルパー関数。現在選択されているプレーヤの名�
 
 Template の ヘルパー関数。プレーヤが選択されているかどうかを返し、CSSを使いハイライトを行うことに利用されます。
 
-~~~ java_script
+~~~ javascript
   Template.leaderboard.events({
     'click input.inc': function () {
       Players.update(Session.get("selected_player"), {$inc: {score: 5}});
@@ -96,7 +96,7 @@ Template の ヘルパー関数。プレーヤが選択されているかどう�
 
 イベントハンドラ。現在選択されているプレーヤを設定します。
 
-~~~ java_script
+~~~ javascript
   Template.player.events({
     'click': function () {
       Session.set("selected_player", this._id);
@@ -108,7 +108,7 @@ Template の ヘルパー関数。プレーヤが選択されているかどう�
 leaderboard.js には3箇所の`selected_player`を読み込む箇所と、1箇所の書き込みを行う場所があります。
 `Template.plauer.events` 関数はイベントハンドラです。"give points" ボタンに対応します。
 
-~~~ java_script
+~~~ javascript
 
 }
 
@@ -130,6 +130,6 @@ if (Meteor.isServer) {
 
 データベースにデフォルトデータを挿入します。アプリケーション起動時にデータベースが空であるときに実行されます。
 
-~~~ java_script
+~~~ javascript
 }
 ~~~
