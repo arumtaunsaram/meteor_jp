@@ -77,7 +77,7 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 		pushState: true
 		, hashChange: false
 		// Skips the first load.
-		, silent: true,
+		, silent: true
 		, root: '/meteor_jp/'
 	}); 
 	$(document).ready(function () {
