@@ -7,4 +7,4 @@ pygments: true
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
 
-url: http://arumtaunsaram.github.io/meteor_jp
+url: http://127.0.0.1:4000/meteor_jp

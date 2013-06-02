@@ -1,5 +1,5 @@
 var require = {
-	baseUrl: './js/module'
+	baseUrl: '/meteor_jp/js/module'
 	, paths: {
 		'backbone': 'lib/backbone-min-amd-1.0.0'
 		, 'underscore': 'lib/underscore-min-amd-1.4.4'

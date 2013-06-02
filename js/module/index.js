@@ -3,19 +3,25 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 
 	/** @type {Backbone.Collection} */
 	var mEntryCollection = new Entry.Collection([])
+	/** @type {Array.<<Backbone.View>>} */
 	  , backboneViews = []
+	/** @type {string} Starts with /, and not trails / */
+	  , basePath = '/meteor_jp'
+	/** @type {Object.<<string, $|function():$>>}*/
 	  , $ui =
 		{
+		/** @type {function():$} */
 			fluidContentContainer: function () {
 				return $('#fluidContent');
 			}
 		}
+	/** @type {Array.<string>} */
 	  , PATH_PREFIXES_TO_PUSH_STATE = ['/index/', '/apiref/', '/reverseref/']
-
+	/** @type {} */
 	  , ID_SOLID_CONTENT = ['', 'index', 'apiref', 'reverseref', 'about_meteor', 'about_meteor_kaiso']
 		/** 
 			For users from bookmarks or who clicks back button.
-			@type {Backbone.Router} 
+			@type {Backbone.Router} An instance of a backbone router. 
 		*/
 	  , mRouter = new (Backbone.Router.extend({
 			routes: {
@@ -105,23 +111,30 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 
 	function initSolidContents () {
 
-		// Makes the anchors inside `volume-selector`,`solidContent` and `footer` an internal transition.
+		// Makes the anchors inside `volume-selector`,`solidContent` and `footer` internal transitions.
 		$('.volume-selector a, #solidContent a, #footer a').each(function () {
 			// TODO: to check hostnames.
-			var path = this.pathname
+			var el = this
+			/** @type {string?} */
 			  , dstId = _.find(ID_SOLID_CONTENT, function (id) {
 					// Returns true if url starts with one of PATH_PREFIXES_TO_PUSH_STATE
-					return path === '/' + id + '.html';
+					return el.pathname === basePath + '/' + id + '.html';
 				});
 
-			console.log('path:' + path);
+			console.log('path:' + el.pathname);
 			console.log('dstId:' + dstId);
-			if (typeof dstId !== 'undefined') {
+			if (typeof dstId === 'string') {
 
-				$(this).click(function (evt) {
-					loadSolidContentAndChangeUrl(dstId, this.search, this.hash);
-					evt.preventDefault();
-				});
+				console.log('Binding a callback..');
+				// Copies {string} `dstId` with a new scope.
+				(function(dstId) {
+					$(el).click(function (evt) {
+						console.log('the callback handled in initSolidContents fired.');
+						loadSolidContentAndChangeUrl(dstId, this.search, this.hash);
+						evt.preventDefault();
+					});
+					console.log('callback binded w/' + dstId);
+				})(dstId);
 			}
 		});
 
@@ -150,7 +163,7 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 		// If url is a target to push state, maps a callback method.
 		if (_.some(PATH_PREFIXES_TO_PUSH_STATE, 
 				function (url) {
-					return pmTargetAnchor.pathname.indexOf(url) === 0;
+					return pmTargetAnchor.pathname.indexOf(basePath + url) === 0;
 				})) {
 			$(pmTargetAnchor).on('click', onClickAnchorToPushState);
 			return;
@@ -231,7 +244,7 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 		// Work in progress...
 		console.log('fallen into supplyOutOfCacheTargetContent:' + pmPath);
 
-		$.get(location.protocol + '//' + location.host + '/' + pmPath, function(data) {
+		$.get(location.protocol + '//' + location.host + basePath + '/' + pmPath, function(data) {
 			$('#fluidContent').html($(data).find('#entryCore'));
 			$('#fluidContent').css('display', 'block');
 			$('#solidContent>article').css('display', 'none');
