@@ -38,8 +38,6 @@ $ meteor
 
 ## ファイル構成
 
-<a name="hierarchy"></a>
-
 ~~~ bash
 .
 ├── leaderboard.css
@@ -133,3 +131,48 @@ if (Meteor.isServer) {
 ~~~ javascript
 }
 ~~~
+
+<a name="reverse_index-leaderboard_insert-arbitrary-records"></a>
+
+## DB に直接レコードを追加し、クライアントの挙動を確認する方法
+
+mongoDB にデータを挿入すると、接続しているクライアント(ブラウザ)に自動的に更新情報が送信され、最新の情報へと更新されます。
+
+_これより公式ドキュメントを参考にした Meteor Kaiso 独自コンテンツとなります。_
+
+(もしまだならば) カレントディレクトリをleaderboarderに移動します。mongoDB 対話モードを起動します(`meteor mongodb`コマンドはカレントディレクトリをプロジェクトディレクトリに移した後、`meteor&`コマンドを使いサーバを起動したあと実行可能です)。
+
+~~~ bash
+$ cd leaderboard
+$ meteor mongo
+connecting to: 127.0.0.1:3002/meteor
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+> 
+~~~
+
+現在挿入されているレコードを確認します。
+
+~~~ javascript
+> db.players.find();
+{ "name" : "Ada Lovelace", "score" : 35, "_id" : "m9dFt5KyYC8LGMGJ7" }
+{ "name" : "Grace Hopper", "score" : 40, "_id" : "FYm5XSuB9j2DNrips" }
+{ "name" : "Marie Curie", "score" : 45, "_id" : "YGJv4LNXpWLvtSb9W" }
+{ "name" : "Carl Friedrich Gauss", "score" : 35, "_id" : "9oFouGLTErYBmWMSJ" }
+{ "name" : "Nikola Tesla", "score" : 5, "_id" : "Yt2qMPaDD2PvdNBrg" }
+{ "name" : "Claude Shannon", "score" : 30, "_id" : "7iagPY6585Stj84dt" }
+~~~
+
+レコードを新たに挿入します。
+
+~~~ javascript
+> db.players.insert({name:"Shuzo Matsuoka", score: 40, _id: "za1q2sw3xed4089ol"})
+~~~
+
+`_id`に指定するidの値は未指定でもクライアントに表示されますが、未指定の場合`_id`の値がオブジェクト型となり、クライアントからの操作では予期していない形となり、操作に不具合を与えるため、他のレコードと同様に適当な17文字から成るidを手動で指定しています。
+
+しばらくすると、127.0.0.1:3000 に接続しているブラウザ上に、mongoDB 対話モードより挿入した"Shuzo Matsuoka"のデータが確認できます。

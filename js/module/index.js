@@ -135,6 +135,9 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 					});
 					console.log('callback binded w/' + dstId);
 				})(dstId);
+			} else {
+				// External links.
+				$(el).attr('target', '_blank');
 			}
 		});
 

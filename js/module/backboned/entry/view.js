@@ -153,10 +153,6 @@ define(['underscore', 'backbone', 'jquery-appear'], function(_, Backbone, $) {
 
 			dst = self.model.get('link');
 
-			if (self.model.get('hashFragment')){
-				dst = '' + dst + '#' + self.model.get('hashFragment');
-			}
-
 			Backbone.history.navigate(
 				dst , {trigger: false}
 			);
