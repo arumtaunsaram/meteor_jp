@@ -27,6 +27,7 @@
         <ul>
           <li
 			><a href="{{ site.url }}/index.html" id="volumeSelector_index">トップ</a></li><li
+			><a href="{{ site.url }}/concept.html" id="volumeSelector_concept">設計概念</a></li><li
 			><a href="{{ site.url }}/apiref.html" id="volumeSelector_apiref">API索引</a></li><li
 			><a href="{{ site.url }}/reverseref.html" id="volumeSelector_reverseref">逆引き索引</a></li>
         </ul>
@@ -39,6 +40,7 @@
   <div class="content" id="solidContent">
     <!-- Contents loaded every time go here -->
     {% include index.html %}
+    {% include concept.md %}
     {% include apiref.html %}
     {% include reverseref.html %}
     {% include about_meteor.html %}
