@@ -7,6 +7,14 @@ ref-official:
     title-jp: サンプルアプリケーション - 順位表
     url: http://meteor.com/examples/leaderboard
 ---
+<dl>
+  <dt>原文: <a href="http://meteor.com/examples/leaderboard">http://meteor.com/examples/leaderboard</a><dt>
+  <dd>
+  <ul>
+    <li>[訳文の最終更新 2013/06/08 - 最新バージョンが0.6.3.1 の時点での内容]</li>
+  </ul>
+  </dd>
+</dl>
 ## 直接体験
 
 - (もしまだならば) Meteor のインストール
@@ -31,10 +39,9 @@ $ meteor
 - サンプルアプリケーションへアクセス
 ブラウザより <http://localhost:3000/> にアクセス
 
-<p class="lead">
-[オフィシャルサイト](http://meteor.com/examples/leaderboard) ではさらにアプリケーション公開用の
-デプロイ用の環境が提供されています。
-</p>
+<div class="note">
+<a href="http://meteor.com/examples/leaderboard">オフィシャルサイト</a>ではさらにアプリケーションの公開が可能なデプロイ用の環境が提供されています。
+</div>
 
 ## ファイル構成
 
