@@ -109,11 +109,13 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 
 	});
 
+	function scrollToTop () {
+		window.scroll(0, 0);
+	}
+
 	function initSolidContents () {
 
-		$('.volume-selector a').click(function () {
-			window.scroll(0, 0);
-		});
+		$('.volume-selector a').click(scrollToTop);
 
 		// Makes the anchors inside `volume-selector`,`solidContent` and `footer` internal transitions.
 		$('.volume-selector a, #solidContent a, #footer a').each(function () {
@@ -127,6 +129,8 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 
 			if (el.getAttribute('href') // false when it returns null or ''
 			   && el.getAttribute('href').substr(0, 1) === '#') {
+
+				// Links inside pages.
 				return;
 			}
 
@@ -138,6 +142,8 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 					$(el).click(function (evt) {
 						//console.log('the callback handled in initSolidContents fired.');
 						loadSolidContentAndChangeUrl(dstId, this.search, this.hash);
+						// TODO support for hash fragments.
+						scrollToTop();
 						evt.preventDefault();
 					});
 					//console.log('callback binded w/' + dstId);
