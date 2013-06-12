@@ -1,0 +1,6 @@
+TypeError: 'null' is not an object (evaluating 'document.getElementById('example-detail').textContent')
+
+  phantomjs://webpage.evaluate():3
+  phantomjs://webpage.evaluate():4
+  phantomjs://webpage.evaluate():4
+null
