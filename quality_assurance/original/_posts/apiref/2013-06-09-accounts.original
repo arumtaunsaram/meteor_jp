@@ -1,0 +1,188 @@
+The Meteor Accounts system builds on top of the userId support in publish and methods. The core packages add the concept of user documents stored in the database, and additional packages add secure password authentication, integration with third party login services, and a pre-built user interface.The basic Accounts system is in the accounts-base package, but applications typically include this automatically by adding one of the login provider packages: accounts-password, accounts-facebook, accounts-github, accounts-google, accounts-meetup, accounts-twitter, or accounts-weibo.Meteor.user() Anywhere but publish functions
+
+Get the current user record, or null if no user is logged in. A reactive data source.
+
+Retrieves the user record for the current user from the Meteor.users collection.On the client, this will be the subset of the fields in the document that are published from the server (other fields won't be available on the client). By default the server publishes username, emails, and profile. See Meteor.users for more on the fields used in user documents.Meteor.userId() Anywhere but publish functions
+
+Get the current user id, or null if no user is logged in. A reactive data source.
+
+Meteor.users Anywhere
+
+A Meteor.Collection containing user documents.
+
+This collection contains one document per registered user. Here's an example user document:{
+  _id: "bbca5d6a-2156-41c4-89da-0329e8c99a4f",  // Meteor.userId()
+  username: "cool_kid_13", // unique name
+  emails: [
+    // each email address can only belong to one user.
+    { address: "cool@example.com", verified: true },
+    { address: "another@different.com", verified: false }
+  ],
+  createdAt: 1349761684042,
+  profile: {
+    // The profile is writable by the user by default.
+    name: "Joe Schmoe"
+  },
+  services: {
+    facebook: {
+      id: "709050", // facebook id
+      accessToken: "AAACCgdX7G2...AbV9AZDZD"
+    },
+    resume: {
+      loginTokens: [
+        { token: "97e8c205-c7e4-47c9-9bea-8e2ccc0694cd",
+          when: 1349761684048 }
+      ]
+    }
+  }
+}
+A user document can contain any data you want to store about a user. Meteor treats the following fields specially:username: a unique String identifying the user.
+emails: an Array of Objects with keys address and verified; an email address may belong to at most one user. verified is a Boolean which is true if the user has verified the address with a token sent over email.
+createdAt: a numeric timestamp (milliseconds since January 1 1970) of the time the user document was created.
+profile: an Object which (by default) the user can create and update with any data.
+services: an Object containing data used by particular login services. For example, its reset field contains tokens used by forgot password links, and its resume field contains tokens used to keep you logged in between sessions.
+Like all Meteor.Collections, you can access all documents on the server, but only those specifically published by the server are available on the client.By default, the current user's username, emails and profile are published to the client. You can publish additional fields for the current user with:Meteor.publish("userData", function () {
+  return Meteor.users.find({_id: this.userId},
+                           {fields: {'other': 1, 'things': 1}});
+});
+If the autopublish package is installed, information about all users on the system is published to all clients. This includes username, profile, and any fields in services that are meant to be public (eg services.facebook.id, services.twitter.screenName). Additionally, when using autopublish more information is published for the currently logged in user, including access tokens. This allows making API calls directly from the client for services that allow this.Users are by default allowed to specify their own profile field with Accounts.createUser and modify it with Meteor.users.update. To allow users to edit additional fields, use Meteor.users.allow. To forbid users from making any modifications to their user document:Meteor.users.deny({update: function () { return true; }});
+Meteor.loggingIn() Client
+
+True if a login method (such as Meteor.loginWithPassword, Meteor.loginWithFacebook, or Accounts.createUser) is currently in progress. A reactive data source.
+
+For example, the accounts-ui package uses this to display an animation while the login request is being processed.Meteor.logout([callback]) Client
+
+Log the user out.
+
+Arguments
+callback Function
+Optional callback. Called with no arguments on success, or with a single Error argument on failure.
+
+Meteor.loginWithPassword(user, password, [callback]) Client
+
+Log the user in with a password.
+
+Arguments
+user Object or String
+Either a string interpreted as a username or an email; or an object with a single key: email, username or id.
+
+password String
+The user's password. This is not sent in plain text over the wire — it is secured with SRP.
+
+callback Function
+Optional callback. Called with no arguments on success, or with a single Error argument on failure.
+
+This function is provided by the accounts-password package. See the Passwords section below.Meteor.loginWithExternalService([options], [callback]) Client
+
+Log the user in using an external service.
+
+Arguments
+callback Function
+Optional callback. Called with no arguments on success, or with a single Error argument on failure.
+
+Options
+requestPermissions Array of Strings
+A list of permissions to request from the user.
+
+requestOfflineToken Boolean
+If true, asks the user for permission to act on their behalf when offline. This stores an additional offline token in the services field of the user document. Currently only supported with Google.
+
+These functions initiate the login process with an external service (eg: Facebook, Google, etc), using OAuth. When called they open a new pop-up window that loads the provider's login page. Once the user has logged in with the provider, the pop-up window is closed and the Meteor client logs in to the Meteor server with the information provided by the external service.In addition to identifying the user to your application, some services have APIs that allow you to take action on behalf of the user. To request specific permissions from the user, pass the requestPermissions option the login function. This will cause the user to be presented with an additional page in the pop-up dialog to permit access to their data. The user's accessToken — with permissions to access the service's API — is stored in the services field of the user document. The supported values for requestPermissions differ for each login service and are documented on their respective developer sites:Facebook: http://developers.facebook.com/docs/authentication/permissions/
+GitHub: http://developer.github.com/v3/oauth/#scopes
+Google: https://developers.google.com/accounts/docs/OAuth2Login#scopeparameter
+Meetup: http://www.meetup.com/meetup_api/auth/#oauth2-scopes
+Twitter, Weibo: requestPermissions currently not supported
+External login services typically require registering and configuring your application before use. The easiest way to do this is with the accounts-ui package which presents a step-by-step guide to configuring each service. However, the data can be also be entered manually in the Accounts.loginServiceConfiguration collection. For example:// first, remove configuration entry in case service is already configured
+Accounts.loginServiceConfiguration.remove({
+  service: "weibo"
+});
+Accounts.loginServiceConfiguration.insert({
+  service: "weibo",
+  clientId: "1292962797",
+  secret: "75a730b58f5691de5522789070c319bc"
+});
+Each external service has its own login provider package and login function. For example, to support GitHub login, run $ meteor add accounts-github and use the Meteor.loginWithGithub function:Meteor.loginWithGithub({
+  requestPermissions: ['user', 'public_repo']
+}, function (err) {
+  if (err)
+    Session.set('errorMessage', err.reason || 'Unknown error');
+});
+{{currentUser}} Handlebars templates
+
+Calls Meteor.user(). Use {{#if currentUser}} to check whether the user is logged in.
+
+{{loggingIn}} Handlebars templates
+
+Calls Meteor.loggingIn().
+
+Accounts.config(options) Anywhere
+
+Set global accounts options.
+
+Options
+sendVerificationEmail Boolean
+New users with an email address will receive an address verification email.
+
+forbidClientAccountCreation Boolean
+Calls to createUser from the client will be rejected. In addition, if you are using accounts-ui, the "Create account" link will not be available.
+
+Accounts.ui.config(options) Client
+
+Configure the behavior of {{loginButtons}}.
+
+Options
+requestPermissions Object
+Which permissions to request from the user for each external service.
+
+requestOfflineToken Object
+To ask the user for permission to act on their behalf when offline, map the relevant external service to true. Currently only supported with Google. See Meteor.loginWithExternalService for more details.
+
+passwordSignupFields String
+Which fields to display in the user creation form. One of 'USERNAME_AND_EMAIL', 'USERNAME_AND_OPTIONAL_EMAIL', 'USERNAME_ONLY', or 'EMAIL_ONLY' (default).
+
+Example:Accounts.ui.config({
+  requestPermissions: {
+    facebook: ['user_likes'],
+    github: ['user', 'repo']
+  },
+  requestOfflineToken: {
+    google: true
+  },
+  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
+});
+Accounts.validateNewUser(func) Server
+
+Set restrictions on new user creation.
+
+Arguments
+func Function
+Called whenever a new user is created. Takes the new user object, and returns true to allow the creation or false to abort.
+
+This can be called multiple times. If any of the functions return false or throw an error, the new user creation is aborted. To set a specific error message (which will be displayed by accounts-ui), throw a new Meteor.Error.Example:// Validate username, sending a specific error message on failure.
+Accounts.validateNewUser(function (user) {
+  if (user.username && user.username.length >= 3)
+    return true;
+  throw new Meteor.Error(403, "Username must have at least 3 characters");
+});
+// Validate username, without a specific error message.
+Accounts.validateNewUser(function (user) {
+  return user.username !== "root";
+});
+Accounts.onCreateUser(func) Server
+
+Customize new user creation.
+
+Arguments
+func Function
+Called whenever a new user is created. Return the new user object, or throw an Error to abort the creation.
+
+Use this when you need to do more than simply accept or reject new user creation. With this function you can programatically control the contents of new user documents.The function you pass will be called with two arguments: options and user. The options argument comes from Accounts.createUser for password-based users or from an external service login flow. options may come from an untrusted client so make sure to validate any values you read from it. The user argument is created on the server and contains a proposed user object with all the automatically generated fields required for the user to log in.The function should return the user document (either the one passed in or a newly-created object) with whatever modifications are desired. The returned document is inserted directly into the Meteor.users collection.The default create user function simply copies options.profile into the new user document. Calling onCreateUser overrides the default hook. This can only be called once.Example:// Support for playing D&D: Roll 3d6 for dexterity
+Accounts.onCreateUser(function(options, user) {
+  var d6 = function () { return Math.floor(Random.fraction() * 6) + 1; };
+  user.dexterity = d6() + d6() + d6();
+  // We still want the default hook's 'profile' behavior.
+  if (options.profile)
+    user.profile = options.profile;
+  return user;
+});
+

@@ -1,0 +1,51 @@
+Meteor.isClient Anywhere
+
+Boolean variable. True if running in client environment.
+
+Meteor.isServer Anywhere
+
+Boolean variable. True if running in server environment.
+
+Meteor.startup(func) Anywhere
+
+Run code when a client or a server starts.
+
+Arguments
+func Function
+A function to run on startup.
+
+On a server, the function will run as soon as the server process is finished starting. On a client, the function will run as soon as the DOM is ready.The startup callbacks are called in the same order as the calls to Meteor.startup were made.On a client, startup callbacks from smart packages will be called first, followed by <body> templates from your .html files, followed by your application code.// On server startup, if the database is empty, create some initial data.
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    if (Rooms.find().count() === 0) {
+      Rooms.insert({name: "Initial room"});
+    }
+  });
+}
+Meteor.absoluteUrl([path], [options]) Anywhere
+
+Generate an absolute URL pointing to the application. The server reads from the ROOT_URL environment variable to determine where it is running. This is taken care of automatically for apps deployed with meteor deploy, but must be provided when using meteor bundle.
+
+Arguments
+path String
+A path to append to the root URL. Do not include a leading "/".
+
+Options
+secure Boolean
+Create an HTTPS URL.
+
+replaceLocalhost Boolean
+Replace localhost with 127.0.0.1. Useful for services that don't recognize localhost as a domain name.
+
+rootUrl String
+Override the default ROOT_URL from the server environment. For example: "http://foo.example.com"
+
+Meteor.settings Anywhere
+
+Meteor.settings contains any deployment-specific options that were provided using the --settings option for meteor run or meteor deploy. If you provide the --settings option, Meteor.settings will be the JSON object in the file you specify. Otherwise, Meteor.settings will be an empty object. If the object contains a key named public, then Meteor.settings.public will also be available on the client.
+
+Meteor.release Anywhere
+
+Meteor.release is a string containing the name of the release with which the project was built (for example, "0.6.4"). It is undefined if the project was built using a git checkout of Meteor.
+
+
