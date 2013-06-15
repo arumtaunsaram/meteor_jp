@@ -1,6 +1,6 @@
 var page = require('webpage').create();
 
-page.open('http://www.meteor.com/examples/leaderboard', function () {
+page.open('http://www.meteor.com/examples/parties', function () {
 
 	var doc = page.evaluate(function () {
 

@@ -1,0 +1,90 @@
+
+            
+              All Tomorrow's Parties
+  Track invitations and RSVPs to events. With d3.js animations.
+
+  
+  
+
+  Try it yourself
+
+  
+  
+    In about 3 minutes, you'll make your own copy of All Tomorrow's Parties
+    and deploy it live on the Internet for you and your friends to
+    use. No programming knowledge required!
+  
+  
+
+
+
+  
+    
+    Pick a name for your new app.
+      I'll call it...
+      
+        .meteor.com
+        new suggestion
+      
+    
+    
+
+    Install Meteor (if you haven't already). In your Terminal window, run:
+$ curl https://install.meteor.com | sh
+
+
+    Make a copy of the example.
+$ meteor create --example parties
+
+
+    
+
+    Get it running on the cloud.
+$ cd parties
+$ meteor deploy .meteor.com
+
+  
+
+    
+
+  
+    Now, open 
+
+    
+    .meteor.com
+    
+
+     in a new tab in your web browser. There's your app!
+  
+
+
+
+  Excited? Confused?
+
+  
+    If you need help, don't understand something, or just want to let
+    us know what you think of Meteor, send us a tweet at
+    @meteorjs.
+  
+
+  
+    You can also ask more in-depth questions on Stack Overflow.
+  
+
+  Get on the mailing list!
+
+  
+    We're adding new features and examples all the time. Get on the
+    mailing list to stay up to date.
+  
+
+  
+    
+    
+    The latest Meteor updates — and nothing else.
+  
+  
+
+
+            
+          

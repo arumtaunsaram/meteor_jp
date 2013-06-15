@@ -1,6 +1,178 @@
-TypeError: 'null' is not an object (evaluating 'document.getElementById('example-detail').textContent')
 
-  phantomjs://webpage.evaluate():3
-  phantomjs://webpage.evaluate():4
-  phantomjs://webpage.evaluate():4
-null
+            
+              Leaderboard
+  Simplest example. A live-updating high score list.
+
+  
+  
+
+  Try it yourself
+
+  
+  
+    In about 3 minutes, you'll make your own copy of Leaderboard
+    and deploy it live on the Internet for you and your friends to
+    use. No programming knowledge required!
+  
+  
+
+
+
+  
+    
+    Pick a name for your new app.
+      I'll call it...
+      
+        .meteor.com
+        new suggestion
+      
+    
+    
+
+    Install Meteor (if you haven't already). In your Terminal window, run:
+$ curl https://install.meteor.com | sh
+
+
+    Make a copy of the example.
+$ meteor create --example leaderboard
+
+
+    
+
+    Get it running on the cloud.
+$ cd leaderboard
+$ meteor deploy .meteor.com
+
+  
+
+    
+
+  
+    Now, open 
+
+    
+    .meteor.com
+    
+
+     in a new tab in your web browser. There's your app!
+  
+
+
+
+  Look around the source code
+  Leaderboard is very simple — under 50 lines of JavaScript,
+    a significant fraction of which is the list of scientists!
+
+  The parts of Leaderboard:
+  
+    A MongoDB collection (leaderboard.js:4) which
+      holds the players and their current scores.
+
+    Two Handlebars HTML templates that contain the markup
+      (leaderboard.html, 33 lines)
+
+    A Session variable, "selected_player", that holds the Mongo
+      document id of the currently selected player, if any. Search
+      leaderboard.js for "selected_player" to see the
+      four places it is used, 3 reads and 1 write.
+
+    Template helper functions to get the data out of JavaScript
+      and into the template. They're in leaderboard.js
+      and they're called "players" (the database query that gets the
+      players), "selected_name" (the name of the currently selected
+      player), and "selected" (evaluates to "selected" if a particular
+      player is the selected one, and the empty string otherwise
+      — this is what sets the CSS to highlight the current
+      player.)
+
+    Two click event handlers, one to set the current player
+      (leaderboard.js:28), one for the "give points"
+      button (leaderboard.js:22).
+
+    Code to initially populate the database. This runs on the
+      server whenever the app starts and the database is
+      empty. (leaderboard.js:34-47)
+  
+
+  
+    The only other code is the CSS
+    in leaderboard.css. Meteor wires up all of the
+    callbacks to listen for events, update the DOM when there are any
+    changes to data that is used by a template, and connects to the
+    server to subscribe to database updates using the DDP protocol.
+  
+
+  Make some changes
+
+  
+  Ready to edit your copy of Leaderboard? First, start Meteor in
+    development mode. Go to your project directory (the directory
+    created by meteor create) and run:
+
+  $ meteor
+
+
+  Now point your web browser at localhost:3000. This is your app running locally
+  in development. The running app will update automatically whenever
+  you edit one of the source files and save it.
+  
+
+  Here are some ideas to get you started:
+
+  
+    
+      Make a button that toggles between sorting by score and sorting
+      by name. Hint: use a Session variable to hold the current sort
+      choice.
+    
+
+    
+      Make a button that resets everyone's score to a random
+      number. (There is already code to do this in the server startup
+      code. Can you factor some of this code out and have it run on
+      both the client and the server?)
+    
+
+    
+      Implement a way to add and remove scientists from the leaderboard.
+    
+  
+
+  
+    When you're ready to push your changes live to the internet for all
+      of your users, simply run meteor deploy once again.
+    
+  
+
+
+
+
+  Excited? Confused?
+
+  
+    If you need help, don't understand something, or just want to let
+    us know what you think of Meteor, send us a tweet at
+    @meteorjs.
+  
+
+  
+    You can also ask more in-depth questions on Stack Overflow.
+  
+
+  Get on the mailing list!
+
+  
+    We're adding new features and examples all the time. Get on the
+    mailing list to stay up to date.
+  
+
+  
+    
+    
+    The latest Meteor updates — and nothing else.
+  
+  
+
+
+            
+          
