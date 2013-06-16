@@ -10,7 +10,7 @@ page.open('http://docs.meteor.com/', function () {
 			/**
 				@type {HTMLElement}
 			 */
-		    elHeading = document.getElementById('accounts_api'),
+		    elHeading = document.getElementById('methods_header'),
 			/**
 				@type {HTMLElement}
 			 */
