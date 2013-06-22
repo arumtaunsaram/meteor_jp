@@ -1,0 +1,178 @@
+These functions control how Meteor servers publish sets of records and how clients can subscribe to those sets.Meteor.publish(name, func) Server
+
+Publish a record set.
+
+Arguments
+name String
+Name of the attribute set. If null, the set has no name, and the record set is automatically sent to all connected clients.
+
+func Function
+Function called on the server each time a client subscribes. Inside the function, this is the publish handler object, described below. If the client passed arguments to subscribe, the function is called with the same arguments.
+
+To publish records to clients, call Meteor.publish on the server with two parameters: the name of the record set, and a publish function that Meteor will call each time a client subscribes to the name.Publish functions can return a Collection.Cursor, in which case Meteor will publish that cursor's documents. You can also return an array of Collection.Cursors, in which case Meteor will publish all of the cursors.If you return multiple cursors in an array, they currently must all be from different collections. We hope to lift this restriction in a future release.
+
+// server: publish the rooms collection, minus secret info.
+Meteor.publish("rooms", function () {
+  return Rooms.find({}, {fields: {secretInfo: 0}});
+});
+
+// ... and publish secret info for rooms where the logged-in user
+// is an admin. If the client subscribes to both streams, the records
+// are merged together into the same documents in the Rooms collection.
+Meteor.publish("adminSecretInfo", function () {
+  return Rooms.find({admin: this.userId}, {fields: {secretInfo: 1}});
+});
+
+// publish dependent documents and simulate joins
+Meteor.publish("roomAndMessages", function (roomId) {
+  check(roomId, String);
+  return [
+    Rooms.find({_id: roomId}, {fields: {secretInfo: 0}}),
+    Messages.find({roomId: roomId})
+  ];
+});
+Otherwise, the publish function should call the functions added (when a new document is added to the published record set), changed (when some fields on a document in the record set are changed or cleared), and removed (when documents are removed from the published record set) to inform subscribers about documents. These methods are provided by this in your publish function.Example:// server: publish the current size of a collection
+Meteor.publish("counts-by-room", function (roomId) {
+  var self = this;
+  check(roomId, String);
+  var count = 0;
+  var initializing = true;
+  var handle = Messages.find({roomId: roomId}).observeChanges({
+    added: function (id) {
+      count++;
+      if (!initializing)
+        self.changed("counts", roomId, {count: count});
+    },
+    removed: function (id) {
+      count--;
+      self.changed("counts", roomId, {count: count});
+    }
+    // don't care about moved or changed
+  });
+
+  // Observe only returns after the initial added callbacks have
+  // run.  Now return an initial value and mark the subscription
+  // as ready.
+  initializing = false;
+  self.added("counts", roomId, {count: count});
+  self.ready();
+
+  // Stop observing the cursor when client unsubs.
+  // Stopping a subscription automatically takes
+  // care of sending the client any removed messages.
+  self.onStop(function () {
+    handle.stop();
+  });
+});
+
+// client: declare collection to hold count object
+Counts = new Meteor.Collection("counts");
+
+// client: subscribe to the count for the current room
+Deps.autorun(function () {
+  Meteor.subscribe("counts-by-room", Session.get("roomId"));
+});
+
+// client: use the new collection
+console.log("Current room has " +
+            Counts.findOne(Session.get("roomId")).count +
+            " messages.");
+Meteor will emit a warning message if you call Meteor.publish in a project that includes the autopublish package. Your publish function will still work.
+
+this.userId Server
+
+Access inside the publish function. The id of the logged-in user, or null if no user is logged in.
+
+This is constant. However, if the logged-in user changes, the publish function is rerun with the new value.this.added(collection, id, fields) Server
+
+Call inside the publish function. Informs the subscriber that a document has been added to the record set.
+
+Arguments
+collection String
+The name of the collection that contains the new document.
+
+id String
+The new document's ID.
+
+fields Object
+The fields in the new document. If _id is present it is ignored.
+
+this.changed(collection, id, fields) Server
+
+Call inside the publish function. Informs the subscriber that a document in the record set has been modified.
+
+Arguments
+collection String
+The name of the collection that contains the changed document.
+
+id String
+The changed document's ID.
+
+fields Object
+The fields in the document that have changed, together with their new values. If a field is not present in fields it was left unchanged; if it is present in fields and has a value of undefined it was removed from the document. If _id is present it is ignored.
+
+this.removed(collection, id) Server
+
+Call inside the publish function. Informs the subscriber that a document has been removed from the record set.
+
+Arguments
+collection String
+The name of the collection that the document has been removed from.
+
+id String
+The ID of the document that has been removed.
+
+this.ready() Server
+
+Call inside the publish function. Informs the subscriber that an initial, complete snapshot of the record set has been sent. This will trigger a call on the client to the onReady callback passed to  Meteor.subscribe, if any.
+
+this.onStop(func) Server
+
+Call inside the publish function. Registers a callback function to run when the subscription is stopped.
+
+Arguments
+func Function
+The callback function
+
+If you call observe or observeChanges in your publish handler, this is the place to stop the observes.this.error(error) Server
+
+Call inside the publish function. Stops this client's subscription, triggering a call on the client to the onError callback passed to Meteor.subscribe, if any. If error is not a Meteor.Error, it will be sanitized.
+
+this.stop() Server
+
+Call inside the publish function. Stops this client's subscription; the onError callback is not invoked on the client.
+
+Meteor.subscribe(name [, arg1, arg2, ... ] [, callbacks]) Client
+
+Subscribe to a record set. Returns a handle that provides stop() and ready() methods.
+
+Arguments
+name String
+Name of the subscription. Matches name of server's publish() call.
+
+arg1, arg2, ... Any
+Optional arguments passed to publisher function on server.
+
+callbacks Function or Object
+Optional. May include onError and onReady callbacks. If a function is passed instead of an object, it is interpreted as an onReady callback.
+
+When you subscribe to a record set, it tells the server to send records to the client. The client stores these records in local Minimongo collections, with the same name as the collection argument used in the publish handler's added, changed, and removed callbacks. Meteor will queue incoming attributes until you declare the Meteor.Collection on the client with the matching collection name.// okay to subscribe (and possibly receive data) before declaring
+// the client collection that will hold it.  assume "allplayers"
+// publishes data from server's "players" collection.
+Meteor.subscribe("allplayers");
+...
+// client queues incoming players records until ...
+...
+Players = new Meteor.Collection("players");
+The client will see a document if the document is currently in the published record set of any of its subscriptions.The onReady callback is called with no arguments when the server marks the subscription as ready. The onError callback is called with a Meteor.Error if the subscription fails or is terminated by the server.Meteor.subscribe returns a subscription handle, which is an object with the following methods:stop()
+Cancel the subscription. This will typically result in the server directing the client to remove the subscription's data from the client's cache.
+
+ready()
+True if the server has marked the subscription as ready. A reactive data source.
+
+If you call Meteor.subscribe within a reactive computation, for example using Deps.autorun, the subscription will automatically be cancelled when the computation is invalidated or stopped; it's not necessary to call stop on subscriptions made from inside autorun. However, if the next iteration of your run function subscribes to the same record set (same name and parameters), Meteor is smart enough to skip a wasteful unsubscribe/resubscribe. For example:Deps.autorun(function () {
+  Meteor.subscribe("chat", {room: Session.get("current-room")});
+  Meteor.subscribe("privateMessages");
+});
+This subscribes you to the chat messages in the current room and to your private messages. When you change rooms by calling Session.set("current-room",
+"new-room"), Meteor will subscribe to the new room's chat messages, unsubscribe from the original room's chat messages, and continue to stay subscribed to your private messages.If more than one subscription sends conflicting values for a field (same collection name, document ID, and field name), then the value on the client will be one of the published values, chosen arbitrarily.
