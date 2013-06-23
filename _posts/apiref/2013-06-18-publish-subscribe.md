@@ -192,7 +192,7 @@ publish 関数の中で呼び出して下さい。subscribe に対しレコー�
 
 * **fields** オブジェクト
 
-    変更があったドキュメントのフィールド群と新しい値。`fields` に指定がない場合は変更されずに残ります。もし `fields` に存在し undefined の値を保つ場合ドキュメントより削除されます。`_id` は無視されます。
+    変更があったドキュメントのフィールド群と新しい値。`fields` に指定がないフィールドは変更されずに残ります。もし `fields` にフィールド名が含まれ値に undefined が指定された場合、フィールドはドキュメントより削除されます。`_id` は無視されます。
 
 ---
 <a name="meteor_publish_this_removed"></a>
@@ -239,7 +239,7 @@ observe か observeChanges を publish 関数の中で呼び出した場合、�
 ### _this_.error(error)
 __サーバサイド__
 
-publish 関数の中で呼び出して下さい。クライアントの subscribe を停止し、クライアントサイドにて `Meteor.subscribe` に渡された `onError` コールバックがあれば発火します。`error` が `Meteor.Error` でなければサニタイズされます。
+publish 関数の中で呼び出して下さい。クライアントの subscribe を停止し、クライアントサイドにて `Meteor.subscribe` に渡された `onError` コールバックがあれば発火します。`error` が `Meteor.Error` 型でなければサニタイズされます。
 
 
 <a name="meteor_publish_this_stop"></a>
@@ -261,7 +261,7 @@ __クライアントサイド__
 
     subscribe 名。サーバの publish() の呼び出しの名前に合致させます。
 
-* **arg1, arg2, ...** 何でも
+* **arg1, arg2, ...** 型の指定はありません
 
     サーバの publish 関数に渡される省略可能の引数。
 
@@ -270,7 +270,7 @@ __クライアントサイド__
     省略可能。`onError` と `onReady` のコールバックを含むと良いでしょう。オブジェクトの代わりに関数を指定した場合、`onReady` のコールバックとして扱われます。
 
 
-レコード群を subscribe した場合、サーバにレコードをクライアントに送信するように伝えます。クライアントはそれらのレコードを publish ハンドラの `added`、`changed` そして `removed` ハンドラの `collection` 引数として指定した名前と同じ名前のローカルの Minimongo collections に保存します。Meteor は クライアントで `Meteor.Collection` がコレクション名を指定して呼び出されるまで、変更をたくわえます。
+レコード群を subscribe した場合、サーバに対し、レコードをクライアントに送信するように伝えることになります。クライアントはそれらのレコードを、 publish ハンドラの `added`、`changed` そして `removed` コールバックの `collection` 引数として指定した名前と同じ名前のローカルの Minimongo collections に保存します。Meteor は クライアントで `Meteor.Collection` がコレクション名を指定して呼び出されるまで、変更をたくわえます。
 
 ~~~ javascript
 // 格納するクライアントのコレクションを宣言する前に subscribe することも
@@ -287,13 +287,13 @@ Players = new Meteor.Collection("players");
 
 サーバにて subscribe の準備が整ったとされると `onReady` コールバックが引数なしで呼ばれます。`onError` コールバックは subscribe が失敗した時かサーバによって終了された場合に `Meteor.Error` とともに呼ばれます。
 
-`Meteor.subscribe` は subscribe を操作するためのハンドルオブジェクトを返却し、オブジェクトは次のメソッドを提供します。
+`Meteor.subscribe` は subscribe を操作できるよう、次のメソッドを提供するオブジェクトを返却します。
 
-* stop()
+* **stop()**
 
     subscribe をキャンセルします。一般的にサーバがクライアントにキャッシュより subscribe のデータを削除させることになります。
 
-* ready()
+* **ready()**
 
     サーバにて subscribe の準備が整ったとされると真を返します。反応可能なデータソースです。
 
