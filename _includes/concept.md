@@ -17,7 +17,7 @@
   <dt>原文: <a href="http://docs.meteor.com/#concepts">http://docs.meteor.com/#concepts</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/06/08 - 最新バージョンが0.6.3.1 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/06/23 - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
