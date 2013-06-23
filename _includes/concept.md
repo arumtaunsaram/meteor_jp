@@ -7,10 +7,10 @@
     <li><a href="#data_and_security-authentication_and_user_accounts">認証とユーザアカウント</a></li>
     <li><a href="#data_and_security-input_validation">入力データのバリデーション処理</a></li>
   </ul>
-  <li><!-- a href="#reactivity" -->レスポンス速度<!-- /a --></li>
+  <li><!-- a href="#reactivity" -->リアクティブプログラミング<!-- /a --></li>
   <li><!-- a href="#live_html" -->Live HTML<!-- /a --></li>
   <li><!-- a href="#templates" -->テンプレート<!-- /a --></li>
-  <li><!-- a href="#smart_packages" -->スマートパッケージ<!-- /a --></li>
+  <li><a href="#smart_packages">スマートパッケージ</a></li>
   <li><!-- a href="#deploying" -->デプロイ<!-- /a --></li>
 </ul>
 <dl>
@@ -46,7 +46,7 @@ Meteor はそういったアプリケーションを書く際に必要となる�
 
 <p>クライアントサイドではより多くの形のファイルが存在します。Meteor は (<code>server/</code> ディレクトリと <code>public/</code> ディレクトリ配下を除き) 全ての JavaScript ファイルをかき集め、軽量化を行いそれぞれのクライアントに配信します。アプリケーション向けに、1つの JavaScript ファイルを使うか、ディレクトリ別に階層化するか、それらの中間を採用するかは自由です。</p>
 
-<p>いくつかの JavaScript ライブラリは <code>client/compatibility</code> ディレクトリに配置した時にだけ有効となります。このディレクトリの中のファイルは新しい変数スコープへとラップされることなく実行されます。これはそれぞれのファイル空間のグローバル変数として宣言された変数がグローバル変数となることを意味します。くわえて、これらのファイルは他のクライアントサイド JavaScript が実行される前に実行されます。</p>
+<p>いくつかの JavaScript ライブラリは <code>client/compatibility/</code> ディレクトリに配置した時にだけ有効となります。このディレクトリの中のファイルは新しい変数スコープへとラップされることなく実行されます。これはそれぞれのファイル空間のグローバル変数として宣言された変数がグローバル変数となることを意味します。くわえて、これらのファイルは他のクライアントサイド JavaScript が実行される前に実行されます。</p>
 
 <p><code>client/</code>, <code>server/</code>, <code>tests/</code>のいずれかのディレクトリ以外に配置されたファイルはクライアントサイドでも、サーバサイドでも読み込まれます! モデルの定義そしてその他の機能のために利用して下さい。Meteor はコードが実行されているのがクライアントサイドか、サーバサイドかによって挙動を変更するための <code>isClient</code> そして <code>isServer</code> という変数を提供しています。(<code>test/</code> と名付けられたディレクトリに配置されたファイルはいかなる場所においても読み込まれません)。</p>
 </p>
@@ -59,7 +59,7 @@ Meteor はそういったアプリケーションを書く際に必要となる�
 
 <p>Meteor アプリケーションの HTML ファイルはサーバサイドフレームワークとはかなり異なる扱われ方をされます。Meteor は全てのディレクトリの HTML ファイルの&lt;head&gt;タグ、&lt;body&gt;タグそして&lt;template&gt;タグのスキャンを行います。&lt;head&gt;部と&lt;body&gt;部は別々に1つの&lt;head&gt;部と&lt;body&gt;部に結合され、クライアントサイドによる初回読み込み時に送信されます。 </p>
 
-<p>一方Template部は JavaScript 関数に変換され、Template オブジェクトより参照可能です。これは HTML テンプレートをクライアントに送信する本当に便利な手法です。更に詳しいことは コンセプト:テンプレート をご確認下さい。 </p>
+<p>一方 Template 部は JavaScript 関数に変換され、Template オブジェクトより参照可能です。これは HTML テンプレートをクライアントに送信する本当に便利な手法です。更に詳しいことは コンセプト:テンプレート をご確認下さい。 </p>
 
 <p>最後に、Meteor サーバは <code>public/</code>ディレクトリ配下の全てのファイルを Rails や Django プロジェクトの様に配信します。これは画像や favicon.ico, robots.txt 等を配置する場所です。 </p>
 
@@ -72,7 +72,7 @@ Meteor はそういったアプリケーションを書く際に必要となる�
 </li>
 </ul>
 
-<p>上記のルールは掛け合わされ、その結果、例えば<code>lib/</code>ディレクトリの中でまたアルファベット順に読み込まれます。そして複数の main.js ファイルが(いくつかのディレクトリに)存在すれば、サブディレクトリに配置されたものが先行して読み込まれます。</p>
+<p>上記のルールは掛け合わされ、その結果、例えば<code>lib/</code>ディレクトリの中でまたアルファベット順に読み込まれます。そして複数の main.js ファイルが (いくつかのディレクトリに) 存在すれば、サブディレクトリに配置されたものが先行して読み込まれます。</p>
 <a name="data_and_security"></a>
 <h2>データとセキュリティ</h2>
 <p> Meteor はクライアントに配布されるコードをローカルのデータベースとやり合う様にシンプルにします。個別のRPCエンドポイント作成やサーバからの返却の遅延を防ぐため手動でクライアントにデータをキャッシュしたり、データが変更されるたびに更新のメッセージを各クライアントに向け調整して配信する等を必要としない簡潔、シンプル、そして安全なアプローチです。 </p>
@@ -152,7 +152,7 @@ var party = { ... };
 Parties.insert(party);
 {% endhighlight %}
 
-<p>サーバが変更を許容したならば、その変更はデータベースへの適用されます。そして変更があったドキュメントを subscribe しているクライアントへと、自動的にその変更を伝搬します。もし拒否した場合、変更を失敗とし、サーバサイドのデータベースには変更を加えず、他のクライアントが変更を目にすることはありません。</p>
+<p>サーバが変更を許容したならば、その変更はデータベースへ適用されます。そして変更があったドキュメントを subscribe しているクライアントへと、自動的にその変更を伝搬します。もし拒否した場合、変更を失敗とし、サーバサイドのデータベースには変更を加えず、他のクライアントが変更を目にすることはありません。</p>
 
 <p>とはいえ、 Meteor にはかわいらしい魔法があります。クライアントがサーバに書き込みリクエストを送信した直後には、サーバからのレスポンスを待たずしてローカルのキャッシュが更新されます。つまり画面はすぐに再描画されます。もしサーバが更新を許容した場合 (多くの場合クライアントサイドにて期待されるケースです) クライアントは1世代先の状態を手にしていたことになり、画面を更新するためにレスポンスを待つ必要もありません。もしサーバが変更を拒絶した場合、Meteor はサーバが返却した結果をもとにクライアントサイドのキャッシュを修正します。</p>
 
@@ -179,15 +179,91 @@ $ meteor add audit-argument-checks
 
 上記コードを実行すると、引数に対し <code>check</code> を行わないアプリケーションのコードと publish 関数は例外を投げるようになります。
 </p>
+<!---
+<a name="reactivity"></a>
+<h3>リアクティブプログラミング</h3>
+Meteor は、データの流れと変更の伝達に主眼を当てた リアクティブプログラミング [<a href="http://en.wikipedia.org/wiki/Reactive_programming">英語版 Wikipedia</a>] の思想を抱えています。すなわち、簡単な命令文でアプリケーションのコードがかけ、コードが参照しているデータに変更があった場合はいつでも自動的に再計算されることを意味しています。
 
-<!-- a name="reactivity"></a>
-<h3>レスポンス速度</h3>
+{% highlight javascript %}
+Deps.autorun(function () {
+  Meteor.subscribe("messages", Session.get("currentRoomId"));
+});
+{% endhighlight %}
+
+<p>上記の例 はセッション変数である <code>currentRoomId</code> にもとづくデータの subscribe を設定しています。もし何らかの理由で <code>Session.get("currentRoomId")</code> の値が変更された場合は、引数として与えられた関数は自動的に実行され、古い設定を上書きする形で新しい subscribe を設定します。</p>
+
+TODO:
+<p>この自動的な再計算は <code>Session</code> と <code>Deps.autorun</code> が互いに協力して実現します。<code>Deps.autorun</code> は任意の<!-- arbitorary what? ->、依存関係が監視されたデータを内部で新しい値とともに評価し、必要に応じて引数として渡された関数の再実行を行います。一方ではデータを提供する <code>Session</code> の様なものは、呼び出しが行われた式やどのようなデータがリクエストされたかを記憶し、データの変更が行われなときに無効化のシグナルを送る準備をしています。
+</p>
+
+<p>この、応答可能な評価と応答可能なデータソースのシンプルなパターンは大きな適応能力を持っています。さらに、subscribe 中断、再 subscribe の呼び出しや正しいタイミングで呼び出されているか保証を行うコードの記述から開発者を解放します。大抵の場合、Meteor を使うことでエラーが侵入しがちなデータ伝搬クラスすべてを取り除くことができます。
+</p>
+
+<p>下記の Meteor の機能はアプリケーションのコードを応答可能な評価として実行します。</p>
+<ul>
+  <li>テンプレート</li>
+  <li><code>Meteor.render</code> と <code>Meteor.renderList</code></li>
+  <li><code>Deps.autorun</code></li>
+</ul>
+<p>そして変更を伝搬することができる応答可能なデータソースとして
+<ul>
+  <li><code>Session</code>変数</li>
+  <li>コレクションに対するDBクエリ</li>
+  <li><code>Meteor.status</code></li>
+  <li>subscribe ハンドラの <code>ready()</code>メソッド</li>
+  <li><code>Meteor.user</code></li>
+  <li><code>Meteor.userId</code></li>
+  <li><code>Meteor.loggingIn</code></li>
+</ul>
+があります。</p>
+<p>さらに、次の機能は <code>stop</code> メソッドを持つオブジェクトを返却し、もし応答可能な評価より呼びだされたら評価が再実行あるいは停止された時に機能は停止されます。</p><!-- 停止と stop が指す内容を要確認 ->
+<ul>
+  <li><code>Deps.autorun</code>(ネストし-入れ子状になっ-ています)</li>
+  <li><code>Meteor.subscribe</code></li>
+  <li><code>observe()</code> そしてカーソラの <code>observeChanges()</code> </li>
+</ul>
+<p>Meteor の実装は <code>Deps</code> と呼ばれるパッケージで、<code>Deps</code> は単刀直入です<!-- of what? how? ->。新らしく応答可能なデータソースを1から作成する際には利用することになるでしょう。</p>
+-->
+<!---
 <a name="live_html"></a>
 <h3>Live HTML</h3>
-<a name="templates"></a>
-<h3>テンプレート</h3>
+HTML のテンプレート化はウェブアプリケーションの中心です。Meteor のライブページ更新機能を使うとアプリケーションの HTML を一つの応答として描画することができます、つまり生成に使ったデータの変更を追跡し自動的に更新することができます。</p>
+<p>この選択可能な機能はどんなHTMLテンプレート提供ライブラリとでも、またアプリケーションの中の JavaScript で生成した HTML とでさえ協調が可能です。例をご覧ください。</p>
+
+{% highlight javascript %}
+var fragment = Meteor.render(
+  function () {
+    var name = Session.get("name") || "Anonymous";
+    return "<div>Hello, " + name + "</div>";
+  });
+document.body.appendChild(fragment);
+
+Session.set("name", "Bob"); // ページは自動的に更新します!
+{% endhighlight %}
+
+<p><code>Meteor.render</code> は描画を行う関数を引数としてとります。この関数は HTML を表す文字列を返す関数です。</p>
+-->
+<!--a name="templates"></a>
+<h3>テンプレート</h3 -->
 <a name="smart_packages"></a>
 <h3>スマートパッケージ</h3>
-<a name="deploying"></a>
+
+<p>Meteor は尋常でないほど強力なパッケージシステムを具えています。今まで紹介してきた機能は標準の Meteor パッケージにより実装されています。</p>
+
+<p>Meteor のパッケージは知的で、パッケージそれ自身が JavaScript のプログラムです。パッケージは Meteor の環境を任意の方法で拡張するため、クライアントあるいはサーバのコードに介入することや、コマンドラインツールに新しい関数をフックさせることができます。いくつかのパッケージの例として:</p>
+<ul>
+  <li>cofffescript パッケージはコマンドラインツールを拡張し、アプリケーションのディレクトリツリーの中のすべての .coffee ファイルを自動的にコンパイルします。一度追加すると JavaScript の代わりに CoffeeScript でアプリケーションを記述することができます。</li>
+  <li>jQuery と Backbone パッケージはクライアントサイドの JavaScript ライブラリを Meteor のパッケージ化した具体例です。JavaScript のファイルをディレクトリツリーにコピーすることでも同じ結果が得られますが、パッケージに追加するのがより高速です。</li>
+  <li>Underscore パッケージはクライアントとサーバ双方の環境を拡張します。</li>
+</ul>
+
+<p>Minimongo、セッションオブジェクトや反応可能な Handlebar テンプレートを含む多くのコアの Meteor の機能は、すべての Meteor アプリケーションに自動的に含まれる内部的なパッケージとして実装されています。</p>
+
+<p>`meteor list` を使うと利用可能なパッケージのリストが確認できます。`meteor add` でパッケージをプロジェクトに追加することができます。`meteor remove` でそれらを削除することができます。</p>
+
+<!-- TODO to prepare translation of api-packages in the apiref -->
+<strong>パッケージ API は頻繁に変更されていて、ドキュメントもないため、現在の時点ではパッケージを作ることはできません。乞うご期待。</strong>
+
+<!-- a name="deploying"></a>
 <h3>デプロイ</h3 -->
 </article>
