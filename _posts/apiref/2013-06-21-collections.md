@@ -26,8 +26,8 @@ Meteor はデータをコレクションに保存します。はじめに `new M
     *   cursor.fetch
     *   cursor.count
     *   cursor.rewind
-    *   cursor.observe
-    *   cursor.observeChanges
+    *   [cursor.observe](#meteor_collection_cursor_observe)
+    *   [cursor.observeChanges](#meteor_collection_cursor_observeChanges)
 *   Meteor.Collection.ObjectID
 
 *   [選択条件の指定](#meteor_collection_cursor_selectors)
@@ -232,7 +232,7 @@ __サーバサイド__
 
 定義した制約にしたがい、クライアントサイドのコードより対象のコレクションへ直接書き込むことを許可します。
 
-#### Options
+#### options
 
 *   **insert, update, remove** 関数
 
@@ -327,6 +327,107 @@ $ meteor remove insecure
 ## カーソラ
 
 カーソラは`find` を使い作成できます。カーソラに含まれるドキュメントにアクセスするには、`forEach`、`map` あるいは `fetch` を使ってください。
+
+---
+<a name="meteor_collection_cursor_observe"></a>
+### _collection_.observe(callbacks)
+__どこでも__
+
+クエリを監視します。結果のセットが変更された場合、コールバックがそれを受け取ります。
+
+#### 引数
+
+*   **callbacks** オブジェクト
+
+    結果のセットが変更された場合にそれが届けられる関数群
+
+クエリの結果が更新された時にコールバックを実行する実況的なクエリを作成します。もし古いコンテンツも対象であれば、それらを含めて全体のコンテンツがコールバック群に届けられます。変更が加わったフィールドのみ受け取りたいのであれば `observeChanges` をご確認ください。
+
+`callbacks` はプロパティに下記の関数を持つことができます。
+
+*   **added(document)** あるいは **addedAt(document, atIndex, before)**
+
+    新しいドキュメント **document** が結果のセットに入りました。新しいドキュメントは **atIndex** に出現しました。 **before** は直後のドキュメントの `_id` です。 **before** は新しく挿入されたドキュメントがクエリ結果の末尾であれば `null` になります。
+
+*   **changed(newDocument, oldDocument)** あるいは **changedAt(newDocument, oldDocument, atIndex)**
+
+    ドキュメントのコンテンツは以前は **oldDocument** で現在は **newDocument** です。変更が加えられたドキュメントの位置は **atIndex** です。
+
+*   **removed(oldDocument)** あるいは **removedAt(oldDocument, atIndex)**
+
+    ドキュメント **oldDocument** はもう結果セットに存在しません。 **atIndex** の位置に存在しました。
+
+*   **movedTo(document, fromIndex, toIndex, before)**
+
+    ドキュメントの結果セットの中での位置が **fromIndex** より **toIndex** ( **before** の直前 ) に変更されました。現在の内容は **document** です。
+
+結果セットの中の順序を気にしないのであれば `added`、`changed` そして `removed` を使って下さい。`addedAt`、`changedAt` そして `removedAt` より効率的です。
+
+`observe` が値を返す前に、`added` (あるいは`addedAt`) がクエリの初回結果を届けるために0回かそれ以上呼ばれます。
+
+`observe` は `stop` メソッドを提供する実況的なクエリハンドルを返却します。コールバック関数群の呼び出しを停止しクエリを取り壊す際には `stop` を引数なしで実行して下さい。これを呼ばないとクエリは永久に監視を続けます。`Deps.autorun` の中の算出にて `observe` が呼び出された場合、算出が再実行あるいは停止された場合に自動的に `observe` は停止します。(カーソラが `reactive` オプションを `false` として作成された場合、初回の結果のみ伝達され、それ以上コールバックは呼び出されません。この場合ハンドラオブジェクトの `stop` を呼ぶ必要はありません。)
+
+---
+<a name="meteor_collection_cursor_observeChanges"></a>
+### _collection_.observeChanges(callbacks)
+__どこでも__
+
+クエリを監視します。結果のセットが変更された場合、コールバックがそれを受け取ります。ドキュメントの新旧差分のみがコールバックに渡されます。
+
+#### 引数
+
+*   **callbacks** オブジェクト
+
+    結果のセットが変更された場合にそれが届けられる関数群
+
+クエリの結果が更新された時にコールバックを実行する実況的なクエリを作成します。`observe` と異なり、`observeChanges` は変更があったドキュメントの内容全体結果ではなく結果セットの新旧の差分のみを提供します。
+
+`callbacks` はプロパティに下記の関数を持つことができます。
+
+*   **added(id, fields)** あるいは **addedAt(id, fields, before)**
+
+    新しいドキュメントが結果のセットに入りました。ドキュメントはID **id** とフィールド **field** が指定されています。 **field** には `_id` を除く全てのフィールドが含まれています。 **before** は直後のドキュメントの `_id` です。 **before** は新しく挿入されたドキュメントがクエリ結果の末尾であれば `null` になります。
+
+*   **changed(id, fields)**
+
+    **id** で一意に定まるドキュメントが変更されました。 **fields** には変更されたフィールドとその新しい値が含まれています。フィールドがドキュメントから削除された場合 **field** の値が `undefined` として表現されます。
+
+*   **movedBefore(id, before)**
+
+    **id** で一意に定まるドキュメントの結果セットの中での位置が変更され、現在は **before** で一意に定まるドキュメントの直前に現れています。
+
+*   **removed(id)**
+
+    **id** で一意に定まるドキュメントが結果セットより取り除かれました。
+
+`observeChanges` はもし `addedBefore` あるいは `movedBefore` を使わないのであれば、明らかにより効率的です。
+
+`observeChanges` が値を返す前に、`added` (あるいは`addedBefore`) がクエリの初回結果を届けるために0回かそれ以上呼ばれます。
+
+`observeChanges` は `stop` メソッドを提供する実況的なクエリハンドルを返却します。コールバック関数群の呼び出しを停止しクエリを取り壊す際には `stop` を引数なしで実行して下さい。これを呼ばないとクエリは永久に監視を続けます。`Deps.autorun` の中の算出にて `observe` が呼び出された場合、算出が再実行あるいは停止され場合に自動的に `observe` は停止します。(カーソラが `reactive` オプションを `false` として作成された場合、初回の結果のみ伝達され、それ以上コールバックは呼び出されません。この場合ハンドラオブジェクトの `stop` を呼ぶ必要はありません。)
+
+*   `observe` とは異なり、`observeChanges` は絶対位置の情報 (`atIndex`、`before`は絶対位置ではありません) を提供しません。これは効率のためです。
+
+例:
+
+~~~ javascript
+// 接続し (onlineNow) ている管理者 (admin) の人数を追い続けます
+var count = 0;
+var query = Users.find({admin: true, onlineNow: true});
+var handle = query.observeChanges({
+  added: function (id, user) {
+    count++;
+    console.log(user.name + "で" + count + "人目の管理者です。");
+  },
+  removed: function () {
+    count--;
+    console.log("一人切断しました。現在の管理者の人数は減って" + count + "人になりました。");
+  }
+});
+
+// 5秒後、人数の追跡を停止します。
+setTimeout(function () {handle.stop();}, 5000);
+~~~
 
 ---
 <a name="meteor_collection_cursor_selectors"></a>
