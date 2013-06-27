@@ -15,11 +15,11 @@ Meteor はデータをコレクションに保存します。はじめに `new M
 *   [Meteor.Collection](#meteor_collection)
     *   [collection.find](#meteor_collection_find)
     *   collection.findOne
-    *   collection.insert
+    *   [collection.insert](#meteor_collection_insert)
     *   collection.update
     *   collection.remove
     *   [collection.allow](#meteor_collection_allow)
-    *   collection.deny
+    *   [collection.deny](#meteor_collection_deny)
 *   [Meteor.Collection.Cursor](#meteor_collection_cursor)
     *   cursor.forEach
     *   cursor.map
@@ -40,7 +40,7 @@ Meteor はデータをコレクションに保存します。はじめに `new M
   <dt>原文: <a href="http://docs.meteor.com/#collections">http://docs.meteor.com/#collections</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/06/22 - 最新バージョンが0.6.4 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/06/28 - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -179,6 +179,42 @@ All of these will be addressed in a future release. For full Minimongo release n
 Minimongo doesn't currently have indexes. It's rare for this to be an issue, since it's unusual for a client to have enough data that an index is worthwhile.
 
 -->
+---
+<a name="meteor_collection_insert"></a>
+### _collection_.insert(doc, [callback])
+__どこでも__
+
+ドキュメントをコレクションに挿入します。ドキュメントに一意の _id を返却します。
+
+#### 引数
+
+*   **doc** オブジェクト型
+
+    挿入するドキュメント。オブジェクトが _id を持たない場合 Meteor が生成します。
+
+*   **callback** 関数
+
+    省略可能。もし指定された場合、第1引数はエラーオブジェクトが、もしエラーが発生していなければ _id が第2引数として渡されます。
+
+ドキュメントをコレクションに追加します。ドキュメントは単なるオブジェクトで、フィールドには EJSON と互換性のあるデータ (配列、オブジェクト、数値、文字列、`null`、真そして偽) のいかなる組み合わせも含めることができます。
+
+`insert` は渡されたオブジェクトに対し一意の ID を生成し、データベースに挿入してそのIDを返却します。もし `insert` が信頼されていないクライアントのコードより呼び出された場合、`allow` 並びに `deny` のルールの結合が許容された場合のみ許可されます。
+
+サーバサイドにてコールバックを指定しない場合は `insert` はデータベースへの書き込みが確認されるまでコードの制御フローはブロックされます。もし何らかの理由でうまく行かなかった場合は例外を投げます。コールバックを指定しない場合でも `insert` は ID を返却します。挿入が完了もしくは失敗した時にコールバックはエラーと結果を示す引数と共に呼び出されます。エラーの場合は `result` は undefined となります。挿入が無事完了した場合、`error` は undefined で `result` は新しいドキュメントの ID となります。
+
+クライアントでは、`insert` はフローを決してブロックしません。コールバックを指定せずサーバサイドで挿入が失敗した場合、Meteor は コンソールに警告を残します。コールバックを指定した場合、Meteor はそのコールバック関数を `error` 並びに `result` 引数と共に呼び出します。エラーの場合は `result` は undefined となります。挿入が成功した場合は `error`が undefined で `result` は挿入が成功したドキュメントの ID になります。
+
+例:
+
+~~~ javascript
+var groceriesId = Lists.insert({name: "スーパーの品物"});
+Items.insert({list: groceriesId, name: "三つ葉"});
+Items.insert({list: groceriesId, name: "柿"});
+
+~~~
+
+
+
 
 ---
 <a name="meteor_collection_find"></a>
@@ -321,6 +357,31 @@ Meteor には特別な "insecure(安全でない)" モードが敏速なプロ�
 ~~~ bash
 $ meteor remove insecure
 ~~~
+
+---
+<a name="meteor_collection_deny"></a>
+### _collection_.deny(options)
+__サーバサイド__
+
+`allow` ルールを上書きします。
+
+#### 引数
+
+*   **insert, update, remove** 関数 
+
+    データベースにリクエストされた更新を観察する関数群で、もし拒絶されるべきならば `allow` ルールが異なる回答をする場合でも、かまわず真を返して下さい。 
+
+*   **fetch** 文字列型が格納された配列
+
+    省略可能なパフォーマンス強化。`update` と `remove` の関数呼び出しの際に、検証のためにデータベースより取得するフィールドを限定します。
+
+*   **transform** 関数
+
+    `Collection` に対する `transform` 指定内容を上書きし指定します。transform を無効化する場合には null を渡して下さい。
+
+`allow` の様に機能しますが、`allow` ルールが許容を判断した場合であっても、特定の更新を確実に拒絶することができます。
+
+クライアントがコレクションに対し更新を試みた場合、Meteor サーバはまず `deny` ルールをチェックします。いずれのルールも真を返さない場合は `allow` ルールを確認します。Meteor は `deny` ルール群が一切真を返さなく、少なくとも1つの `allow` ルールが `true` を返却した場合に更新を許可します。
 
 ---
 <a name="meteor_collection_cursor"></a>
