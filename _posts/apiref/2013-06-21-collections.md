@@ -16,8 +16,8 @@ Meteor はデータをコレクションに保存します。はじめに `new M
     *   [collection.find](#meteor_collection_find)
     *   collection.findOne
     *   [collection.insert](#meteor_collection_insert)
-    *   collection.update
-    *   collection.remove
+    *   [collection.update](#meteor_collection_update)
+    *   [collection.remove](#meteor_collection_remove)
     *   [collection.allow](#meteor_collection_allow)
     *   [collection.deny](#meteor_collection_deny)
 *   [Meteor.Collection.Cursor](#meteor_collection_cursor)
@@ -30,10 +30,10 @@ Meteor はデータをコレクションに保存します。はじめに `new M
     *   [cursor.observeChanges](#meteor_collection_cursor_observeChanges)
 *   Meteor.Collection.ObjectID
 
-*   [選択条件の指定](#meteor_collection_cursor_selectors)
-*   [変更内容の指定](#meteor_collection_cursor_modifiers)
-*   [ソート条件の指定](#meteor_collection_cursor_sort_specifiers)
-*   [フィールドの指定](#meteor_collection_cursor_field_specifiers)
+*   [選択条件の指定](#meteor_collection_selectors)
+*   [変更内容の指定](#meteor_collection_modifiers)
+*   [ソート条件の指定](#meteor_collection_sort_specifiers)
+*   [フィールドの指定](#meteor_collection_field_specifiers)
 
 
 <dl>
@@ -214,7 +214,127 @@ Items.insert({list: groceriesId, name: "柿"});
 ~~~
 
 
+---
+<a name="meteor_collection_update"></a>
+### _collection_.update(selector, modifier, [options], [callback])
+__どこでも__
 
+コレクションの中の1つかそれ以上のドキュメントを修正します。
+
+#### 引数
+
+*   **selector** [選択条件指定子](#meteor_collection_selectors)あるいはオブジェクトのID
+
+    どのドキュメントを修正するかを指定します。
+
+*   **modifier** [変更内容指定子](#meteor_collection_modifier)
+
+    どの様にドキュメントを修正するかを指定します。
+
+*   **callback** 関数
+
+    省略可能。指定した場合にはエラーオブジェクトを引数として呼び出されます。
+
+#### Options
+
+*   **multi** 真偽値
+
+    合致するドキュメントすべてを修正する場合、真としてください。合致するドキュメント1つのみを修正する場合偽としてください (デフォルト設定です) 。
+
+**selector** に合致するドキュメントを **modifier** に沿い修正します ( [変更内容指定子 - modifier のドキュメント](#meteor_collection_modifiers) をご参照ください)。
+
+`modifier` の挙動は呼び出し元が信頼されているコードかそうでないかによって異なります。信頼されているコードにはサーバサイドと Method API を使い記述されたコードが含まれます。信頼されていないコードはクライアントサイドのコードそしてブラウザの JavaScript コンソールの様なものが含まれます。
+
+*   信頼されたコードは **multi** に真を設定することで一度に複数のドキュメントを修正することができ、また任意の [選択条件指定子](#meteor_collection_selectors) を使い修正するドキュメントを指定することができます。`allow` や `deny` を使い設定されたすべてのアクセス制御ルールをすっ飛ばします。
+
+*   信頼されていないコードは `_id` にて指定された1つのドキュメントしか一度に修正することができません。更新は対応する `allow` 並んで `deny` ルールが確認された後にのみ許容されます。
+
+サーバにおいては、コールバックを指定しなかった場合は `update` がデータベースへの書き込みを確認するか、書き込みが失敗し例外を投げるまで次のコードには進みません。もしコールバックを律儀に指定した場合、`update` はすぐに制御フローを解放し次のコードへ進みます。更新が完了すると指定されたコールバックは、失敗した場合1つのエラー引数とともに、あるいは成功した場合は引数なしで呼び出されます。
+
+クライアントサイドでは、`update` は制御のブロックは決してしません。コールバックを指定せずにサーバで更新が失敗した場合、Meteor は警告をコンソールに残します。コールバックを指定した場合、Meteor はエラーがあった場合にはそれを引数として、成功した場合には引数なしでコールバックを呼び出します。
+
+クライアントサイドの例:
+
+~~~ javascript
+// 管理者向け画面の givePoints ボタンが押下された際、現在のプレーヤに
+// 5ポイント授けます。新しいスコアは即座にすべてのクライアントに
+// 伝えられます。
+Template.adminDashboard.events({
+  'click .givePoints': function () {
+    Players.update(Session.get("現在のプレーヤ"), {$inc: {score: 5}});
+  }
+});
+~~~
+
+サーバサイドの例:
+
+~~~ javascript
+// 10以上のスコアを持つそれぞれのユーザに「勝者」のバッジを授けます。
+// ユーザがログインしていて、バッジリストが閲覧可能であれば自動的に
+// 各自のスクリーンは更新されます。
+Meteor.methods({
+  declareWinners: function () {
+    Players.update({score: {$gt: 10}},
+                   {$addToSet: {badges: "勝者"}},
+                   {multi: true});
+  }
+});
+~~~
+
+**Mongo の upsert 機能は実装されていません。**
+
+---
+<a name="meteor_collection_remove"></a>
+### _collection_.remove(selector, [callback])
+__どこでも__
+
+コレクションのドキュメントを削除します。
+
+#### 引数
+
+*   **selector** [選択条件指定子](#meteor_collection_selectors)あるいはオブジェクトのID
+
+    どのドキュメントを削除するかを指定します。
+
+*   **callback** 関数
+
+    省略可能。指定した場合にはエラーオブジェクトを引数として呼び出されます。
+
+**selector** に合致するドキュメントすべてを探し出し、コレクションから削除します。
+
+`remove` の挙動は呼び出し元が信頼されているコードかそうでないかによって異なります。信頼されているコードにはサーバサイドと Method API を使い記述されたコードが含まれます。信頼されていないコードはクライアントサイドのコードそしてブラウザの JavaScript コンソールの様なものが含まれます。
+
+*   信頼されたコードは任意の [選択条件指定子](#meteor_collection_selectors) を使い削除するドキュメントを探し出し、与えられた選択条件指定子に合致する複数のドキュメントを一度に削除することができます。`allow` や `deny` を使い設定されたすべてのアクセス制御ルールをすっ飛ばします。安全性を確保するため、**selector** が省略 (あるいは `undefined` が指定された) 場合、いずれのドキュメントも削除されません。本当にコレクションの中のすべてのドキュメントを削除したい場合には、 **selector** に `{}` を指定して下さい。
+
+*   信頼されていないコードは `_id` にて指定された1つのドキュメントしか一度に修正することができません。更新は対応する `allow` 並んで `deny` ルールが確認された後にのみ許容されます。
+
+サーバにおいては、コールバックを指定しなかった場合は `remove` がデータベースの更新を確認するか、更新が失敗し例外を投げるまで次のコードには進みません。もしコールバックを律儀に指定した場合、`remove` はすぐに制御フローを解放し次のコードへ進みます。削除が完了すると指定されたコールバックは、失敗した場合1つのエラー引数とともに、あるいは成功した場合は引数なしで呼び出されます。
+
+クライアントサイドでは、`remove` は制御のブロックは決してしません。コールバックを指定せずにサーバで更新が失敗した場合、Meteor は警告をコンソールに残します。コールバックを指定した場合、Meteor はエラーがあった場合にはそれを引数として、成功した場合には引数なしでコールバックを呼び出します。
+
+クライアントサイドの例:
+
+~~~ javascript
+// チャットメッセージの remove ボタンがクリックされた場合、その
+// メッセージを削除します。
+Template.chat.events({
+  'click .remove': function () {
+    Messages.remove(this._id);
+  }
+});
+~~~
+
+サーバサイドの例:
+
+~~~ javascript
+// サーバが起動した際にログを削除し、karma が2未満のユーザを削除します。
+Meteor.startup(function () {
+  if (Meteor.isServer) {
+    Logs.remove({});
+    Players.remove({karma: {$lt: -2}});
+  }
+});
+~~~
 
 ---
 <a name="meteor_collection_find"></a>
@@ -491,7 +611,7 @@ setTimeout(function () {handle.stop();}, 5000);
 ~~~
 
 ---
-<a name="meteor_collection_cursor_selectors"></a>
+<a name="meteor_collection_selectors"></a>
 ## 選択条件指定子
 
 もっとも簡単な形の選択条件指定子は、合致が求められるドキュメントのキー群です。
@@ -526,7 +646,7 @@ setTimeout(function () {handle.stop();}, 5000);
 すべての選択条件指定子については、Mongo ドキュメント ([英語版](http://www.mongodb.org/display/DOCS/Advanced+Queries)) をご確認ください。
 
 ---
-<a name="meteor_collection_cursor_modifiers"></a>
+<a name="meteor_collection_modifiers"></a>
 ## 変更内容指定子
 
 変更内容指定子は「どの様にフィールド群を変更しドキュメントを更新するか」を細かく指定します。いくつかの例です。
@@ -550,7 +670,7 @@ Users.update({_id: "123"}, {name: "花子", friends: ["カズ"]});
 すべての変更内容指定子については、Mongo ドキュメント ([英語版](http://www.mongodb.org/display/DOCS/Updating#Updating-ModifierOperations)) をご確認ください。
 
 ---
-<a name="meteor_collection_cursor_sort_specifiers"></a>
+<a name="meteor_collection_sort_specifiers"></a>
 ## ソート条件指定子
 
 ソート条件を指定するには、いくつかの文法から選ぶことができます。
@@ -566,7 +686,7 @@ Users.update({_id: "123"}, {name: "花子", friends: ["カズ"]});
 最後の例はオブジェクトのキー順序が保存される JavaScript の実装系のみで有効です。多くの場合は有効ですが、確認はあなたの手でおこなってください。
 
 ---
-<a name="meteor_collection_cursor_field_specifiers"></a>
+<a name="meteor_collection_field_specifiers"></a>
 ## フィールド指定子
 
 サーバサイドにおいてはクエリを使い結果に含有させる、あるいは結果から除外する特定のフィールド群を指定することができます。(フィールド指定子は現状クライアントサイドでは無視されます。)
