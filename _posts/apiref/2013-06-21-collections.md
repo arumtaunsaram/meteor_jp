@@ -12,28 +12,28 @@ ref-official:
 
 Meteor はデータをコレクションに保存します。はじめに `new Meteor.Collection` を使いコレクションを宣言しましょう。
 
-*   [Meteor.Collection](#meteor_collection)
-    *   [collection.find](#meteor_collection_find)
-    *   [collection.findOne](#meteor_collection_findOne)
-    *   [collection.insert](#meteor_collection_insert)
-    *   [collection.update](#meteor_collection_update)
-    *   [collection.remove](#meteor_collection_remove)
-    *   [collection.allow](#meteor_collection_allow)
-    *   [collection.deny](#meteor_collection_deny)
-*   [Meteor.Collection.Cursor](#meteor_collection_cursor)
-    *   cursor.forEach
-    *   cursor.map
-    *   cursor.fetch
-    *   cursor.count
-    *   cursor.rewind
-    *   [cursor.observe](#meteor_collection_cursor_observe)
-    *   [cursor.observeChanges](#meteor_collection_cursor_observeChanges)
+*   [Meteor.Collection](#Meteor_Collection)
+    *   [collection.find](#Meteor_collection_find)
+    *   [collection.findOne](#Meteor_collection_findOne)
+    *   [collection.insert](#Meteor_collection_insert)
+    *   [collection.update](#Meteor_collection_update)
+    *   [collection.remove](#Meteor_collection_remove)
+    *   [collection.allow](#Meteor_collection_allow)
+    *   [collection.deny](#Meteor_collection_deny)
+*   [Meteor.Collection.Cursor](#Meteor_Collection_cursor)
+    *   [cursor.forEach](#Meteor_Collection_cursor_forEach)
+    *   [cursor.map](#Meteor_Collection_cursor_map)
+    *   [cursor.fetch](#Meteor_Collection_cursor_fetch)
+    *   [cursor.count](#Meteor_Collection_cursor_cout)
+    *   [cursor.rewind](#Meteor_Collection_cursor_rewind)
+    *   [cursor.observe](#Meteor_Collection_cursor_observe)
+    *   [cursor.observeChanges](#Meteor_Collection_cursor_observeChanges)
 *   Meteor.Collection.ObjectID
 
-*   [選択条件の指定](#meteor_collection_selectors)
-*   [変更内容の指定](#meteor_collection_modifiers)
-*   [ソート条件の指定](#meteor_collection_sort_specifiers)
-*   [フィールドの指定](#meteor_collection_field_specifiers)
+*   [選択条件の指定](#Meteor_Collection_selectors)
+*   [変更内容の指定](#Meteor_Collection_modifiers)
+*   [ソート条件の指定](#Meteor_Collection_sort_specifiers)
+*   [フィールドの指定](#Meteor_Collection_field_specifiers)
 
 
 <dl>
@@ -45,7 +45,7 @@ Meteor はデータをコレクションに保存します。はじめに `new M
   </dd>
 </dl>
 ---
-<a name="meteor_collection"></a>
+<a name="Meteor_Collection"></a>
 ## new Meteor.Collection(name, [options])
 __どこでも__
 
@@ -179,8 +179,9 @@ All of these will be addressed in a future release. For full Minimongo release n
 Minimongo doesn't currently have indexes. It's rare for this to be an issue, since it's unusual for a client to have enough data that an index is worthwhile.
 
 -->
+
 ---
-<a name="meteor_collection_find"></a>
+<a name="Meteor_collection_find"></a>
 ### _collection_.find(selector, [options])
 __どこでも__
 
@@ -188,13 +189,13 @@ __どこでも__
 
 #### 引数
 
-*   **selector** [選択条件指定子](#meteor_collection_selectors)
+*   **selector** [選択条件指定子](#Meteor_Collection_selectors)
 
     検索クエリ
 
 #### Options
 
-*   **sort** [ソート条件指定子](#meteor_collection_sort_specifiers)
+*   **sort** [ソート条件指定子](#Meteor_Collection_sort_specifiers)
 
     ソート順序 (デフォルト設定: 自然順序)
 
@@ -206,7 +207,7 @@ __どこでも__
 
     返却する結果の最大数
 
-*   **fields** [フィールド指定子](#meteor_collection_field_specifiers)
+*   **fields** [フィールド指定子](#Meteor_Collection_field_specifiers)
 
     (サーバサイドのみ) 返却する、あるいは除外するフィールドを辞書形式で指定。
 
@@ -225,21 +226,21 @@ __どこでも__
 カーソラは反応可能なデータソースです。最初に反応可能な算出 (テンプレートや autorun) のなかで `fetch`、`map` あるいは `forEach` でカーソラのドキュメントを取得した場合、Meteor は内在するデータを依存関係として登録します。カーソラに含まれるドキュメントに変更があった場合、再算出が実行されます。`{reactive: false}` を `find` の option に指定するとこの動きを止められます。
 
 ---
-<a name="meteor_collection_findOne"></a>
-### _collection_.find(selector, [options])
+<a name="Meteor_collection_findOne"></a>
+### _collection_.findOne(selector, [options])
 __どこでも__
 
 ソート条件とスキップ条件を使いソートされた結果より、条件に合致する最初のドキュメントを探し出します。
 
 #### 引数
 
-*   **selector** [選択条件指定子](#meteor_collection_selectors)
+*   **selector** [選択条件指定子](#Meteor_Collection_selectors)
 
     検索クエリ
 
 #### Options
 
-*   **sort** [ソート条件指定子](#meteor_collection_sort_specifiers)
+*   **sort** [ソート条件指定子](#Meteor_Collection_sort_specifiers)
 
     ソート順序 (デフォルト設定: 自然順序)
 
@@ -247,7 +248,7 @@ __どこでも__
 
     結果の先頭からスキップする数値
 
-*   **fields** [フィールド指定子](#meteor_collection_field_specifiers)
+*   **fields** [フィールド指定子](#Meteor_Collection_field_specifiers)
 
     (サーバサイドのみ) 返却する、あるいは除外するフィールドを辞書形式で指定。
 
@@ -262,7 +263,7 @@ __どこでも__
 `find(selector, options).fetch()[0]` に等しいです。
 
 ---
-<a name="meteor_collection_insert"></a>
+<a name="Meteor_collection_insert"></a>
 ### _collection_.insert(doc, [callback])
 __どこでも__
 
@@ -297,7 +298,7 @@ Items.insert({list: groceriesId, name: "柿"});
 
 
 ---
-<a name="meteor_collection_update"></a>
+<a name="Meteor_collection_update"></a>
 ### _collection_.update(selector, modifier, [options], [callback])
 __どこでも__
 
@@ -305,11 +306,11 @@ __どこでも__
 
 #### 引数
 
-*   **selector** [選択条件指定子](#meteor_collection_selectors)あるいはオブジェクトのID
+*   **selector** [選択条件指定子](#Meteor_Collection_selectors)あるいはオブジェクトのID
 
     どのドキュメントを修正するかを指定します。
 
-*   **modifier** [変更内容指定子](#meteor_collection_modifier)
+*   **modifier** [変更内容指定子](#Meteor_Collection_modifier)
 
     どの様にドキュメントを修正するかを指定します。
 
@@ -323,11 +324,11 @@ __どこでも__
 
     合致するドキュメントすべてを修正する場合、真としてください。合致するドキュメント1つのみを修正する場合偽としてください (デフォルト設定です) 。
 
-**selector** に合致するドキュメントを **modifier** に沿い修正します ( [変更内容指定子 - modifier のドキュメント](#meteor_collection_modifiers) をご参照ください)。
+**selector** に合致するドキュメントを **modifier** に沿い修正します ( [変更内容指定子 - modifier のドキュメント](#Meteor_Collection_modifiers) をご参照ください)。
 
 `modifier` の挙動は、呼び出し元が信頼されているコードかそうでないかによって異なります。信頼されているコードにはサーバサイドと Method API を使い記述されたコードが含まれます。信頼されていないコードはクライアントサイドのコードそしてブラウザの JavaScript コンソールの様なものが含まれます。
 
-*   信頼されたコードは **multi** に真を設定することで一度に複数のドキュメントを修正することができ、また任意の [選択条件指定子](#meteor_collection_selectors) を使い修正するドキュメントを指定することができます。`allow` や `deny` を使い設定されたすべてのアクセス制御ルールをすっ飛ばします。
+*   信頼されたコードは **multi** に真を設定することで一度に複数のドキュメントを修正することができ、また任意の [選択条件指定子](#Meteor_Collection_selectors) を使い修正するドキュメントを指定することができます。`allow` や `deny` を使い設定されたすべてのアクセス制御ルールをすっ飛ばします。
 
 *   信頼されていないコードは `_id` にて指定された1つのドキュメントしか一度に修正することができません。更新は対応する `allow` 並んで `deny` ルールが確認された後にのみ許容されます。
 
@@ -366,7 +367,7 @@ Meteor.methods({
 **Mongo の upsert 機能は実装されていません。**
 
 ---
-<a name="meteor_collection_remove"></a>
+<a name="Meteor_collection_remove"></a>
 ### _collection_.remove(selector, [callback])
 __どこでも__
 
@@ -374,7 +375,7 @@ __どこでも__
 
 #### 引数
 
-*   **selector** [選択条件指定子](#meteor_collection_selectors)あるいはオブジェクトのID
+*   **selector** [選択条件指定子](#Meteor_Collection_selectors)あるいはオブジェクトのID
 
     どのドキュメントを削除するかを指定します。
 
@@ -386,7 +387,7 @@ __どこでも__
 
 `remove` の挙動は呼び出し元が信頼されているコードかそうでないかによって異なります。信頼されているコードにはサーバサイドと Method API を使い記述されたコードが含まれます。信頼されていないコードはクライアントサイドのコードそしてブラウザの JavaScript コンソールの様なものが含まれます。
 
-*   信頼されたコードは任意の [選択条件指定子](#meteor_collection_selectors) を使い削除するドキュメントを探し出し、与えられた選択条件指定子に合致する複数のドキュメントを一度に削除することができます。`allow` や `deny` を使い設定されたすべてのアクセス制御ルールをすっ飛ばします。安全性を確保するため、 **selector** が省略 (あるいは `undefined` が指定された) 場合、いずれのドキュメントも削除されません。本当にコレクションの中のすべてのドキュメントを削除したい場合には、 **selector** に `{}` を指定して下さい。
+*   信頼されたコードは任意の [選択条件指定子](#Meteor_Collection_selectors) を使い削除するドキュメントを探し出し、与えられた選択条件指定子に合致する複数のドキュメントを一度に削除することができます。`allow` や `deny` を使い設定されたすべてのアクセス制御ルールをすっ飛ばします。安全性を確保するため、 **selector** が省略 (あるいは `undefined` が指定された) 場合、いずれのドキュメントも削除されません。本当にコレクションの中のすべてのドキュメントを削除したい場合には、 **selector** に `{}` を指定して下さい。
 
 *   信頼されていないコードは `_id` にて指定された1つのドキュメントしか一度に修正することができません。更新は対応する `allow` 並んで `deny` ルールが確認された後にのみ許容されます。
 
@@ -419,7 +420,7 @@ Meteor.startup(function () {
 ~~~
 
 ---
-<a name="meteor_collection_allow"></a>
+<a name="Meteor_collection_allow"></a>
 ### _collection_.allow(options)
 __サーバサイド__
 
@@ -516,7 +517,7 @@ $ meteor remove insecure
 ~~~
 
 ---
-<a name="meteor_collection_deny"></a>
+<a name="Meteor_collection_deny"></a>
 ### _collection_.deny(options)
 __サーバサイド__
 
@@ -541,17 +542,99 @@ __サーバサイド__
 クライアントがコレクションに対し更新を試みた場合、Meteor サーバはまず `deny` ルールをチェックします。いずれのルールも真を返さない場合は `allow` ルールを確認します。Meteor は `deny` ルール群が一切真を返さなく、少なくとも1つの `allow` ルールが `true` を返却した場合に更新を許可します。
 
 ---
-<a name="meteor_collection_cursor"></a>
+<a name="Meteor_Collection_cursor"></a>
 ## カーソラ
 
 カーソラは`find` を使い作成できます。カーソラに含まれるドキュメントにアクセスするには、`forEach`、`map` あるいは `fetch` を使ってください。
 
 ---
-<a name="meteor_collection_cursor_observe"></a>
+<a name="Meteor_Collection_cursor_forEach"></a>
+### _collection_.forEach(callback)
+__どこでも__
+
+連続的にそして同期的に、合致するドキュメントそれぞれにつき一回 `callback` を実行します。
+
+#### 引数
+
+*   **callback** 関数
+
+    呼び出す関数。
+
+反応可能な算出の中で呼び出された場合、合致するドキュメント群を依存関係として登録します。
+
+例:
+
+~~~ javascript
+// 上位5位のスコアにつく記事 (posts) のタイトルを出力します
+var topPosts = Posts.find({}, {sort: {score: -1}, limit: 5});
+var count = 0;
+topPosts.forEach(function (post) {
+  console.log("記事のタイトル " + count + ": " + post.title);
+  count += 1;
+});
+~~~
+
+---
+<a name="Meteor_Collection_cursor_map"></a>
+### _collection_.forEach(callback)
+__どこでも__
+
+すべての合致するドキュメントに対しコールバック関数をマップし、配列を返却します。
+
+#### 引数
+
+*   **callback** 関数
+
+    呼び出す関数。
+
+反応可能な算出の中で呼び出された場合、合致するドキュメント群を依存関係として登録します。
+
+サーバサイドでは `callback` の動き次第では、先行して実行された `callback` を実行している間に別の `callback` 呼び出しが走る場合があります。厳密な連続性が必要な場合、かわりに `forEach` を使ってください。
+
+---
+<a name="Meteor_Collection_cursor_fetch"></a>
+### _collection_.fetch()
+__どこでも__
+
+すべての合致するドキュメントを配列として返却します。
+
+反応可能な算出の中で呼び出された場合、`fetch` は合致するドキュメントを依存関係として登録します。
+
+---
+<a name="Meteor_Collection_cursor_count"></a>
+### _collection_.count()
+__どこでも__
+
+クエリに合致するドキュメントの合計を数値で返却します。
+
+~~~ javascript
+// ある条件に合致する記事の合計を数値で返却します。データベースが変更
+// されると更新される形に、自動的に変換されます。
+var frag = Meteor.render(function () {
+  var highScoring = Posts.find({score: {$gt: 10}});
+  return "<p>スコアが11以上の記事が" + highScoring.count() + "件存在します。" ;
+});
+document.body.appendChild(frag);
+~~~
+
+ほかの関数とは異なり、`count` は合致するドキュメントを合計した数値のみ依存関係として登録します。(結果セットに含まれるドキュメントの変更や順序の変更では再計算は行われません。)
+
+---
+<a name="Meteor_Collection_cursor_rewind"></a>
+### _collection_.rewind()
+__どこでも__
+
+クエリカーソラをリセットします。
+
+`forEach`、`map` あるいは `fetch` メソッドはカーソラに対し1度しか呼び出すことができません。カーソラの中のデータに1回以上アクセスするためには、 `rewind` を使いカーソラをリセットしてください。
+
+---
+<a name="Meteor_Collection_cursor_observe"></a>
 ### _collection_.observe(callbacks)
 __どこでも__
 
 クエリを監視します。結果のセットが変更された場合、コールバックがそれを受け取ります。
+
 
 #### 引数
 
@@ -586,7 +669,7 @@ __どこでも__
 `observe` は `stop` メソッドを提供する実況的なクエリハンドルを返却します。コールバック関数群の呼び出しを停止しクエリを取り壊す際には `stop` を引数なしで実行して下さい。これを呼ばないとクエリは永久に監視を続けます。`Deps.autorun` の中の算出にて `observe` が呼び出された場合、算出が再実行あるいは停止された場合に自動的に `observe` は停止します。(カーソラが `reactive` オプションを `false` として作成された場合、初回の結果のみ伝達され、それ以上コールバックは呼び出されません。この場合ハンドラオブジェクトの `stop` を呼ぶ必要はありません。)
 
 ---
-<a name="meteor_collection_cursor_observeChanges"></a>
+<a name="Meteor_Collection_cursor_observeChanges"></a>
 ### _collection_.observeChanges(callbacks)
 __どこでも__
 
@@ -648,7 +731,7 @@ setTimeout(function () {handle.stop();}, 5000);
 ~~~
 
 ---
-<a name="meteor_collection_selectors"></a>
+<a name="Meteor_Collection_selectors"></a>
 ## 選択条件指定子
 
 もっとも簡単な形の選択条件指定子は、合致が求められるドキュメントのキー群です。
@@ -683,7 +766,7 @@ setTimeout(function () {handle.stop();}, 5000);
 すべての選択条件指定子については、Mongo ドキュメント ([英語版](http://www.mongodb.org/display/DOCS/Advanced+Queries)) をご確認ください。
 
 ---
-<a name="meteor_collection_modifiers"></a>
+<a name="Meteor_Collection_modifiers"></a>
 ## 変更内容指定子
 
 変更内容指定子は「どの様にフィールド群を変更しドキュメントを更新するか」を細かく指定します。いくつかの例です。
@@ -707,7 +790,7 @@ Users.update({_id: "123"}, {name: "花子", friends: ["カズ"]});
 すべての変更内容指定子については、Mongo ドキュメント ([英語版](http://www.mongodb.org/display/DOCS/Updating#Updating-ModifierOperations)) をご確認ください。
 
 ---
-<a name="meteor_collection_sort_specifiers"></a>
+<a name="Meteor_Collection_sort_specifiers"></a>
 ## ソート条件指定子
 
 ソート条件を指定するには、いくつかの文法から選ぶことができます。
@@ -723,7 +806,7 @@ Users.update({_id: "123"}, {name: "花子", friends: ["カズ"]});
 最後の例はオブジェクトのキー順序が保存される JavaScript の実装系のみで有効です。多くの場合は有効ですが、確認はあなたの手でおこなってください。
 
 ---
-<a name="meteor_collection_field_specifiers"></a>
+<a name="Meteor_Collection_field_specifiers"></a>
 ## フィールド指定子
 
 サーバサイドにおいてはクエリを使い結果に含有させる、あるいは結果から除外する特定のフィールド群を指定することができます。(フィールド指定子は現状クライアントサイドでは無視されます。)
