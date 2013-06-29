@@ -14,3 +14,7 @@ Meteor サーバをAPIサーバとして利用する方法は Meteor 開発チ�
 また非公式ではありますが、PhoneGap (Apache Cordova) を使い Meteor アプリケーションを Android アプリとして配布することができるフレームワークが GitHub にて公開されています。
 
 * [meteor-phonegap guaka/meteor-phonegap GitHub](https://github.com/guaka/meteor-phonegap)
+
+iOS 向け Objective-C での DDP クライアント実装について
+
+* [DDP library for iOS - Google Groups](https://groups.google.com/forum/#!topic/meteor-core/q8Ylsxe-GZU)
