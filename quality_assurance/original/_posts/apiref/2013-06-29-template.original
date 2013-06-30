@@ -1,0 +1,255 @@
+A template that you declare as <template name="foo"> ... </template> can be accessed as the function Template.foo, which returns a string of HTML when called.The same template may occur many times on the page, and these occurrences are called template instances. Template instances have a life cycle of being created, put into the document, and later taken out of the document and destroyed. Meteor manages these stages for you, including determining when a template instance has been removed or replaced and should be cleaned up. You can associate data with a template instance, and you can access its DOM nodes when it is in the document.Additionally, Meteor will maintain a template instance and its state even if its surrounding HTML is re-rendered into new DOM nodes. As long as the structure of template invocations is the same, Meteor will not consider any instances to have been created or destroyed. You can request that the same DOM nodes be retained as well using preserve and constant.There are a number of callbacks and directives that you can specify on a named template and that apply to all instances of the template. They are described below.Template.myTemplate([data]) Client
+
+Call a template function by name to produce HTML.
+
+Arguments
+data Object
+Optional. The data context object with which to call the template.
+
+When called inside a template helper, the body of Meteor.render, or other settings where reactive HTML is being generated, the resulting HTML is annotated so that it renders as reactive DOM elements. Otherwise, the HTML is unadorned and static.Template.myTemplate.rendered = function ( ) { ... } Client
+
+Provide a callback when an instance of a template is rendered.
+
+This callback is called once when an instance of Template.myTemplate is rendered into DOM nodes and put into the document for the first time, and again each time any part of the template is re-rendered.In the body of the callback, this is a template instance object that is unique to this occurrence of the template and persists across re-renderings. Use the created and destroyed callbacks to perform initialization or clean-up on the object.Template.myTemplate.created = function ( ) { ... } Client
+
+Provide a callback when an instance of a template is created.
+
+This callback is called when an invocation of myTemplate represents a new occurrence of the template and not a re-rendering of an existing template instance. Inside the callback, this is the new template instance object. Properties you set on this object will be visible from the rendered and destroyed callbacks and from event handlers.This callback fires once and is the first callback to fire. Every created has a corresponding destroyed; that is, if you get a created callback with a certain template instance object in this, you will eventually get a destroyed callback for the same object.Template.myTemplate.destroyed = function ( ) { ... } Client
+
+Provide a callback when an instance of a template is destroyed.
+
+This callback is called when an occurrence of a template is taken off the page for any reason and not replaced with a re-rendering. Inside the callback, this is the template instance object being destroyed.This callback is most useful for cleaning up or undoing any external effects of created. It fires once and is the last callback to fire.Template.myTemplate.events(eventMap) Client
+
+Specify event handlers for this template.
+
+Arguments
+eventMap Event map
+Event handlers to associate with this template.
+
+Declare event handers for instances of this template. Multiple calls add new event handlers in addition to the existing ones.See Event Maps for a detailed description of the event map format and how event handling works in Meteor.Template.myTemplate.helpers(helpers) Client
+
+Specify template helpers available to this template.
+
+Arguments
+helpers Object
+Dictionary of helper functions by name.
+
+Each template has a local dictionary of helpers that are made available to it, and this call specifies helpers to add to the template's dictionary.Example:Template.myTemplate.helpers({
+  foo: function () {
+    return Session.get("foo");
+  }
+});
+In Handlebars, this helper would then be invoked as {{foo}}.The following syntax is equivalent, but won't work for reserved property names:Template.myTemplate.foo = function () {
+  return Session.get("foo");
+};
+Template.myTemplate.preserve(selectors) Client
+
+Specify rules for preserving individual DOM elements on re-render.
+
+Arguments
+selectors Array or Object
+Array of CSS selectors that each match at most one element, such as ['.thing1', '.thing2'], or, alternatively, a dictionary of selectors and node-labeling functions (see below).
+
+You can "preserve" a DOM element during re-rendering, leaving the existing element in place in the document while replacing the surrounding HTML. This means that re-rendering a template need not disturb text fields, iframes, and other sensitive elements it contains. The elements to preserve must be present both as nodes in the old DOM and as tags in the new HTML. Meteor will patch the DOM around the preserved elements.By default, new Meteor apps automatically include the preserve-inputs package. This preserves all elements of type input, textarea, button, select, and option that have unique id attributes or that have name attributes that are unique within an enclosing element with an id attribute. To turn off this default behavior, simply remove the preserve-inputs package.
+
+Preservation is useful in a variety of cases where replacing a DOM element with an identical or modified element would not have the same effect as retaining the original element. These include:Input text fields and other form controls
+Elements with CSS animations
+Iframes
+Nodes with references kept in JavaScript code
+If you want to preserve a whole region of the DOM, an element and its children, or nodes not rendered by Meteor, use a constant region instead.To preserve nodes, pass a list of selectors, each of which should match at most one element in the template. When the template is re-rendered, the selector is run on the old DOM and the new DOM, and Meteor will reuse the old element in place while working in any HTML changes around it.A second form of preserve takes a labeling function for each selector and allows the selectors to match multiple nodes. The node-labeling function takes a node and returns a label string that is unique for each node, or false to exclude the node from preservation.For example, to preserve all <input> elements with ids in template 'foo', use:Template.foo.preserve({
+  'input[id]': function (node) { return node.id; }
+});
+Selectors are interpreted as rooted at the top level of the template. Each occurrence of the template operates independently, so the selectors do not have to be unique on the entire page, only within one occurrence of the template. Selectors will match nodes even if they are in sub-templates.Preserving a node does not preserve its attributes or contents. They will be updated to reflect the new HTML. Text in input fields is not preserved unless the input field has focus, in which case the cursor and selection are left intact. Iframes retain their navigation state and animations continue to run as long as their parameters haven't changed.There are some cases where nodes can not be preserved because of constraints inherent in the DOM API. For example, an element's tag name can't be changed, and it can't be moved relative to its parent or other preserved nodes. For this reason, nodes that are re-ordered or re-parented by an update will not be preserved.Previous versions of Meteor had an implicit page-wide preserve directive that labeled nodes by their "id" and "name" attributes. This has been removed in favor of the explicit, opt-in mechanism.
+
+Template instancesA template instance object represents an occurrence of a template in the document. It can be used to access the DOM and it can be assigned properties that persist across page re-renderings.Template instance objects are found as the value of this in the created, rendered, and destroyed template callbacks and as an argument to event handlers.In addition to the properties and functions described below, you can assign additional properties of your choice to the object. Property names starting with _ are guaranteed to be available for your use. Use the created and destroyed callbacks to perform initialization or clean-up on the object.You can only access findAll, find, firstNode, and lastNode from the rendered callback and event handlers, not from created and destroyed, because they require the template instance to be in the DOM.this.findAll(selector) Client
+
+Find all elements matching selector in this template instance.
+
+Arguments
+selector String
+The CSS selector to match, scoped to the template contents.
+
+Returns an array of DOM elements matching selector.The template instance serves as the document root for the selector. Only elements inside the template and its sub-templates can match parts of the selector.this.find(selector) Client
+
+Find one element matching selector in this template instance.
+
+Arguments
+selector String
+The CSS selector to match, scoped to the template contents.
+
+Returns one DOM element matching selector, or null if there are no such elements.The template instance serves as the document root for the selector. Only elements inside the template and its sub-templates can match parts of the selector.this.firstNode Client
+
+The first top-level DOM node in this template instance.
+
+The two nodes firstNode and lastNode indicate the extent of the rendered template in the DOM. The rendered template includes these nodes, their intervening siblings, and their descendents. These two nodes are siblings (they have the same parent), and lastNode comes after firstNode, or else they are the same node.this.lastNode Client
+
+The last top-level DOM node in this template instance.
+
+this.data Client
+
+The data context of this instance's latest invocation.
+
+This property provides access to the data context at the top level of the template. It is updated each time the template is re-rendered. Access is read-only and non-reactive.Meteor.render(htmlFunc) Client
+
+Create DOM nodes that automatically update themselves as data changes.
+
+Arguments
+htmlFunc Function returning a string of HTML
+Function that generates HTML to be rendered. Called immediately and re-run whenever data changes. May also be a string of HTML instead of a function.
+
+Meteor.render creates a DocumentFragment (a sequence of DOM nodes) that automatically updates in realtime. Most Meteor apps don't need to call this directly; they use templates and Meteor handles the rendering.Pass in htmlFunc, a function that returns an HTML string. Meteor.render calls the function and turns the output into DOM nodes. Meanwhile, it tracks the data that was used when htmlFunc ran, and automatically wires up callbacks so that whenever any of the data changes, htmlFunc is re-run and the DOM nodes are updated in place.You may insert the returned DocumentFragment directly into the DOM wherever you would like it to appear. The inserted nodes will continue to update until they are taken off the screen. Then they will be automatically cleaned up. For more details about clean-up, see Deps.flush.Meteor.render tracks the data dependencies of htmlFunc by running it in a reactive computation, so it can respond to changes in any reactive data sources used by that function. For more information, or to learn how to make your own reactive data sources, see Reactivity.Example:// Client side: show the number of players online.
+var frag = Meteor.render(function () {
+  return "<p>There are " + Players.find({online: true}).count() +
+    " players online.</p>";
+});
+document.body.appendChild(frag);
+
+// Server side: find all players that have been idle for a while,
+// and mark them as offline. The count on the screen will
+// automatically update on all clients.
+Players.update({idleTime: {$gt: 30}}, {$set: {online: false}});
+Meteor.renderList(observable, docFunc, [elseFunc]) Client
+
+Create DOM nodes that automatically update themselves based on the results of a database query.
+
+Arguments
+observable Cursor
+Query cursor to observe as a reactive source of ordered documents.
+
+docFunc Function taking a document and returning HTML
+Render function to be called for each document.
+
+elseFunc Function returning HTML
+Optional. Render function to be called when query is empty.
+
+Creates a DocumentFragment that automatically updates as the results of a database query change. Most Meteor apps use {{#each}} in a template instead of calling this directly.renderList is more efficient than using Meteor.render to render HTML for a list of documents. For example, if a new document is created in the database that matches the query, a new item will be rendered and inserted at the appropriate place in the DOM without re-rendering the other elements. Similarly, if a document changes position in a sorted query, the DOM nodes will simply be moved and not re-rendered.docFunc is called as needed to generate HTML for each document. If you provide elseFunc, then whenever the query returns no results, it will be called to render alternate content. You might use this to show a message like "No records match your query."Each call to docFunc or elseFunc is run in its own reactive computation so that if it has other external data dependencies, it will be individually re-run when the data changes.Example:// List the titles of all of the posts that have the tag
+// "frontpage". Keep the list updated as new posts are made, as tags
+// change, etc.  Display the selected post differently.
+var frag = Meteor.renderList(
+  Posts.find({tags: "frontpage"}),
+  function(post) {
+    var style = Session.equals("selectedId", post._id) ? "selected" : "";
+    // A real app would need to quote/sanitize post.name
+    return '<div class="' + style + '">' + post.name + '</div>';
+  });
+document.body.appendChild(frag);
+
+// Select a post.  This will cause only the selected item and the
+// previously selected item to update.
+var somePost = Posts.findOne({tags: "frontpage"});
+Session.set("selectedId", somePost._id);
+Event Maps
+
+Several functions take event maps. An event map is an object where the properties specify a set of events to handle, and the values are the handlers for those events. The property can be in one of several forms:
+
+eventtype
+Matches a particular type of event, such as 'click'.
+
+eventtype selector
+Matches a particular type of event, but only when it appears on an element that matches a certain CSS selector.
+
+event1, event2
+To handle more than one type of event with the same function, use a comma-separated list.
+
+The handler function receives two arguments: event, an object with information about the event, and template, a template instance for the template where the handler is defined. The handler also receives some additional context data in this, depending on the context of the current element handling the event. In a Handlebars template, an element's context is the Handlebars data context where that element occurs, which is set by block helpers such as #with and #each.
+
+Example:
+
+{
+  // Fires when any element is clicked
+  'click': function (event) { ... },
+
+  // Fires when any element with the 'accept' class is clicked
+  'click .accept': function (event) { ... },
+
+  // Fires when 'accept' is clicked, or a key is pressed
+  'keydown, click .accept': function (event) { ... }
+}
+Most events bubble up the document tree from their originating element. For example, 'click p' catches a click anywhere in a paragraph, even if the click originated on a link, span, or some other element inside the paragraph. The originating element of the event is available as the target property, while the element that matched the selector and is currently handling it is called currentTarget.
+
+{
+  'click p': function (event) {
+    var paragraph = event.currentTarget; // always a P
+    var clickedElement = event.target; // could be the P or a child element
+  }
+}
+If a selector matches multiple elements that an event bubbles to, it will be called multiple times, for example in the case of 'click
+div' or 'click *'. If no selector is given, the handler will only be called once, on the original target element.
+
+The following properties and methods are available on the event object passed to handlers:
+
+type String
+The event's type, such as "click", "blur" or "keypress".
+
+target DOM Element
+The element that originated the event.
+
+currentTarget DOM Element
+The element currently handling the event. This is the element that matched the selector in the event map. For events that bubble, it may be target or an ancestor of target, and its value changes as the event bubbles.
+
+which Number
+For mouse events, the number of the mouse button (1=left, 2=middle, 3=right). For key events, a character or key code.
+
+stopPropagation()
+Prevent the event from propagating (bubbling) up to other elements. Other event handlers matching the same element are still fired, in this and other event maps.
+
+stopImmediatePropagation()
+Prevent all additional event handlers from being run on this event, including other handlers in this event map, handlers reached by bubbling, and handlers in other event maps.
+
+preventDefault()
+Prevents the action the browser would normally take in response to this event, such as following a link or submitting a form. Further handlers are still called, but cannot reverse the effect.
+
+isPropagationStopped()
+Returns whether stopPropagation() has been called for this event.
+
+isImmediatePropagationStopped()
+Returns whether stopImmediatePropagation() has been called for this event.
+
+isDefaultPrevented()
+Returns whether preventDefault() has been called for this event.
+
+Returning false from a handler is the same as calling both stopImmediatePropagation and preventDefault on the event.
+
+Event types and their uses include:
+
+click
+Mouse click on any element, including a link, button, form control, or div. Use preventDefault() to prevent a clicked link from being followed. Some ways of activating an element from the keyboard also fire click.
+
+dblclick
+Double-click.
+
+focus, blur
+A text input field or other form control gains or loses focus. You can make any element focusable by giving it a tabindex property. Browsers differ on whether links, checkboxes, and radio buttons are natively focusable. These events do not bubble.
+
+change
+A checkbox or radio button changes state. For text fields, use blur or key events to respond to changes.
+
+mouseenter, mouseleave
+The pointer enters or leaves the bounds of an element. These events do not bubble.
+
+mousedown, mouseup
+The mouse button is newly down or up.
+
+keydown, keypress, keyup
+The user presses a keyboard key.  keypress is most useful for catching typing in text fields, while keydown and keyup can be used for arrow keys or modifier keys.
+
+tap
+Tap on an element. On touch-enabled devices, this is a replacement to click that fires immediately. These events are synthesized from touchmove and touchend.
+
+Other DOM events are available as well, but for the events above, Meteor has taken some care to ensure that they work uniformly in all browsers.
+
+Constant regions
+
+You can mark a region of a template as "constant" and not subject to re-rendering using the {{#constant}}...{{/constant}} block helper. Content inside the #constant block helper is preserved exactly as-is even if the enclosing template is re-rendered. Changes to other parts of the template are patched in around it in the same manner as preserve. Unlike individual node preservation, a constant region retains not only the identities of its nodes but also their attributes and contents. The contents of the block will only be evaluated once per occurrence of the enclosing template.
+
+Constant regions allow non-Meteor content to be embedded in a Meteor template. Many third-party widgets create and manage their own DOM nodes programmatically. Typically, you put an empty element in your template, which the widget or library will then populate with children. Normally, when Meteor re-renders the enclosing template it would remove the new children, since the template says it should be empty. If the container is wrapped in a #constant block, however, it is left alone; whatever content is currently in the DOM remains.
+
+Constant regions are intended for embedding non-Meteor content. Event handlers and reactive dependencies don't currently work correctly inside constant regions.
+
+Reactivity isolation
+
+Each template runs as its own reactive computation. When the template accesses a reactive data source, such as by calling Session.get or making a database query, this establishes a data dependency that will cause the whole template to be re-rendered when the data changes. This means that the amount of re-rendering for a particular change is affected by how you've divided your HTML into templates.
+
+Typically, the exact extent of re-rendering is not crucial, but if you want more control, such as for performance reasons, you can use the {{#isolate}}...{{/isolate}} helper. Data dependencies established inside an #isolate block are localized to the block and will not in themselves cause the parent template to be re-rendered. This block helper essentially conveys the reactivity benefits you would get by pulling the content out into a new sub-template.
+
+
