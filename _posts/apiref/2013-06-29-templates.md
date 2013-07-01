@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "Meteor Kaiso - APIリファレンス: テンプレート APi"
+title: "Meteor Kaiso - APIリファレンス: テンプレート API"
 category: apiref
 ref-official: 
   - title: Documentation
@@ -19,12 +19,12 @@ ref-official:
 名前が指定されたテンプレートに設定できる数々のコールバックと命令があり、それらはすべてのテンプレートのインスタンスに適用されます。下記にその詳細を記します。
 
 *   [Template.myTemplate.](#Template_myTemplate)
-    *   rendered
-    *   created
+    *   [rendered](#Template_myTemplate_rendered)
+    *   [created](#Template_myTemplate_created)
     *   destroyed
     *   events
     *   helpers
-    *   [preserve](#Template_myTemplate_preserve)
+    *   preserve
 *   [テンプレートインスタンス](#Template_instances)
     *   this.findAll
     *   this.find
@@ -42,7 +42,7 @@ ref-official:
   <dt>原文: <a href="http://docs.meteor.com/#templates_api">http://docs.meteor.com/#templates_api</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/06/30 - 最新バージョンが0.6.4 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/07/01 - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -62,6 +62,28 @@ HTMLを生成するにあたり、テンプレートを指定して実行しま�
     省略可能。テンプレートを呼び出す際にデータを指定します。
 
 テンプレートヘルパの中で呼び出された場合の Meteor.render の出力、あるいは反応可能なHTMLが存在する他の設定により呼びだされた場合、結果として出力されるHTML には反応可能なDOM要素として描画されるよう注釈がつきます。他の場合についてはHTMLに注釈はつかず静的となります。
+
+---
+<a name="Template_myTemplate_rendered"></a>
+### Template.myTemplate.rendered = function () \{ ... \}
+__クライアントサイド__
+
+テンプレートのインスタンスが描画された時のコールバックを指定します。
+
+このコールバックは Template.myTemplate がDOMノードに描画され、ドキュメントに組み込まれた際に一度呼ばれ、テンプレートのいずれかの部分が再描画された場合に再度呼び出されます。
+
+コールバック関数の中身においては、this はテンプレートの出現に対し一意となるテンプレートのインスタンスで、再描画に渡り永続します。インスタンスオブジェクトの初期化と後始末については crteated と destroyed コールバックを使用してください。 
+
+---
+<a name="Template_myTemplate_created"></a>
+### Template.myTemplate.created = function () \{ ... \}
+__クライアントサイド__
+
+テンプレートのインスタンスが生成された時のコールバックを指定します。
+
+このコールバックは myTemplate の実行が新しいテンプレートの出現を示し、既に存在するテンプレートインスタンスの再描画ではない場合に呼び出されます。コールバック関数の中身においては、this は新たなテンプレートインスタンスオブジェクトです。このオブジェクトに設定したプロパティは rendered と destroyed コールバックとイベントハンドラより参照可能です。
+
+このコールバックは一度呼ばれ、また一番最初に呼ばれるコールバックです。すべての created は対応する destroyed を持ちます。これはつまり、あるテンプレートインスタンスオブジェクトのインスタンスを created にて this より獲得したのならば、最終的に destroyed で同じオブジェクトを獲得することを意味します。
 
 ---
 <a name="Template_myTemplate_preserve"></a>
