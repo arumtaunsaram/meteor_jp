@@ -8,4 +8,4 @@ category: reverseref
 
 Meteor アプリケーションはすべてのHTMLが合成され、SPA (シングルページアプリケーション) を提供するのに役立ちますが、どうしてもURLによって異なるルーティングが必要な場合、下記の記事が有用です。
 
-* [Creating a Multi-Page Site with Meteor | Nettuts +](http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-multi-page-site-with-meteor/)
+* [Creating a Multi-Page Site with Meteor | Nettuts + (外部サイト・英語)](http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-multi-page-site-with-meteor/)
