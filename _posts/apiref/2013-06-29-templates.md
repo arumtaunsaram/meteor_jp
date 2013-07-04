@@ -21,10 +21,10 @@ ref-official:
 *   [Template.myTemplate.](#Template_myTemplate)
     *   [rendered](#Template_myTemplate_rendered)
     *   [created](#Template_myTemplate_created)
-    *   destroyed
-    *   events
-    *   helpers
-    *   preserve
+    *   [destroyed](#Template_myTemplate_destroyed)
+    *   [events](#Template_myTemplate_events)
+    *   [helpers](#Template_myTemplate_helpers)
+    *   [preserve](#Template_myTemplate_preserve)
 *   [テンプレートインスタンス](#Template_instances)
     *   this.findAll
     *   this.find
@@ -84,6 +84,72 @@ __クライアントサイド__
 このコールバックは myTemplate の実行が新しいテンプレートの出現を示し、既に存在するテンプレートインスタンスの再描画ではない場合に呼び出されます。コールバック関数の中身においては、this は新たなテンプレートインスタンスオブジェクトです。このオブジェクトに設定したプロパティは rendered と destroyed コールバックとイベントハンドラより参照可能です。
 
 このコールバックは一度呼ばれ、また一番最初に呼ばれるコールバックです。すべての created は対応する destroyed を持ちます。これはつまり、あるテンプレートインスタンスオブジェクトのインスタンスを created にて this より獲得したのならば、最終的に destroyed で同じオブジェクトを獲得することを意味します。
+
+---
+<a name="Template_myTemplate_destroyed"></a>
+### Template.myTemplate.destroyed = function () \{ ... \}
+__クライアントサイド__
+
+テンプレートのインスタンスが消去される時のコールバックを指定します。
+
+
+このコールバックはどんな理由であれ、出現したテンプレートがページより消滅し、再描画によって書き換えられなかった場合に呼び出されます。コールバックの中身においては、this は消去されつつあるテンプレートインスタンスとなります。
+
+
+このコールバックは後始末、あるいは create でほどこした外部的な効果の差し戻しにとても便利です。一度だけ呼び出され、呼び出すことができる最後のコールバックです。 
+
+
+---
+<a name="Template_myTemplate_events"></a>
+### Template.myTemplate.events(evetMap)
+__クライアントサイド__
+
+このテンプレートへのイベントハンドラを指定します。
+
+### 引数
+
+* **eventMap** [イベントマップ](#Template_Event_Maps)
+
+    このテンプレートに関連付けるイベントハンドラ。
+
+このテンプレートのインスタンス群のイベントハンドラを宣言します。複数回呼び出した場合は既存のものに加える形で新しいイベントハンドラを追加します。
+
+イベントマップの詳細と、イベントマップが Meteor においてどの様に動くかについては [イベントマップ](#Template_Event_map) をご参照下さい。
+
+---
+<a name="Template_myTemplate_helpers"></a>
+### Template.myTemplate.helpers(helpers)
+__クライアントサイド__
+
+このテンプレートで利用可能なテンプレートヘルパを設定します。
+
+### 引数
+
+* **helpers** オブジェクト型
+
+    名前によるヘルパ関数の辞書。
+
+それぞれのテンプレートは専用に作成されたヘルパ群のローカルの辞書を持ち、この関数を呼ぶとテンプレートの辞書にヘルパが追加されます。
+
+例:
+
+~~~ javascript
+Template.myTemplate.helpers({
+  foo: function () {
+    return Session.get("foo");
+  }
+});
+~~~
+
+Handlebars で、このヘルパーは \{\{foo\}\} として実行されます。
+
+次の文法は同等ですが、予約後を使ったプロパティ名に対しては無効です。
+
+~~~ javascript
+Template.myTemplate.foo = function () {
+  return Session.get("foo");
+};
+~~~
 
 ---
 <a name="Template_myTemplate_preserve"></a>
