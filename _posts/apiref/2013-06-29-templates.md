@@ -26,11 +26,11 @@ ref-official:
     *   [helpers](#Template_myTemplate_helpers)
     *   [preserve](#Template_myTemplate_preserve)
 *   [テンプレートインスタンス](#Template_instances)
-    *   this.findAll
-    *   this.find
-    *   this.firstNode
-    *   this.lastNode
-    *   this.data
+    *   [this.findAll](#Template_instance_findAll)
+    *   [this.find](#Template_instance_findAll)
+    *   [this.firstNode](#Template_instance_findAll)
+    *   [this.lastNode](#Template_instance_findAll)
+    *   [this.data](#Template_instance_findAll)
 *   [Meteor.render](#Meteor_render)
 *   Meteor.renderList
 *   [イベントマップ](#Template_Event_Maps)
@@ -206,6 +206,67 @@ DOM API にそなわる制約によりノードが保存できないいくつか
 解説するプロパティと関数に加え、'_' で名前が始まるプロパティについては開発者にて使用できることが保証されています。オブジェクトの初期化あるいは後始末を行うには created あるいは destroyed コールバック関数を使用してください。
 
 findAll、find、firstNode と lastNode へは rendered のコールバックとイベントハンドラからのみ参照することができます。テンプレートインスタンスがDOMの中に存在していることが前提のため、 created と destroyed から参照することはできません。
+
+---
+<a name="Template_instance_findAll"></a>
+### this.findAll(selector)
+__クライアントサイド__
+
+テンプレートインスタンスの中で selector に合致するすべての要素を探します。
+
+### 引数
+
+*   **selector** 文字列型
+
+    テンプレートのコンテンツを対象とした、合致させるべき CSS セレクタ
+
+selector に合致するDOM要素の配列を返却します。
+
+テンプレートのインスタンスはこのセレクタのルート要素として振舞い、テンプレートとサブテンプレートの中の要素のみ、このセレクタの対象として合致します。
+
+---
+<a name="Template_instance_find"></a>
+### this.find(selector)
+__クライアントサイド__
+
+テンプレートインスタンスの中で selector に合致する1つの要素を探します。
+
+### 引数
+
+*   **selector** 文字列型
+
+    テンプレートのコンテンツを対象とした、合致させるべき CSS セレクタ
+
+selector に合致するDOM要素を返却します。もし指定したセレクタに合致したコンテンツが無ければ null を返します。
+
+テンプレートのインスタンスはこのセレクタのルート要素として振舞い、テンプレートとサブテンプレートの中の要素のみ、このセレクタの対象として合致します。
+
+---
+<a name="Template_instance_firstNode"></a>
+### this.firstNode
+__クライアントサイド__
+
+テンプレートインスタンスの中のトップレベルの最初のDOMノードです。
+
+selector に合致するDOM要素を返却します。もし指定したセレクタに合致したコンテンツが無ければ null を返します。
+
+テンプレートのインスタンスはこのセレクタのルート要素として振舞い、テンプレートとサブテンプレートの中の要素のみ、このセレクタの対象として合致します。
+
+---
+<a name="Template_instance_lastNode"></a>
+### this.lastNode
+__クライアントサイド__
+
+テンプレートインスタンスの中のトップレベルの最後のDOMノードです。
+
+---
+<a name="Template_instance_data"></a>
+### this.data
+__クライアントサイド__
+
+このインスタンスが最後に実行された際のデータを指します。
+
+このプロパティはテンプレートのトップレベルにあてられたデータへの参照を提供します。テンプレートが更新されるたびに更新されます。参照はリードオンリで反応可能ではありません。
 
 ---
 <a name="Meteor_render"></a>
