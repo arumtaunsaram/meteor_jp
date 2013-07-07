@@ -8,10 +8,10 @@
     <li><a href="#data_and_security-input_validation">入力データのバリデーション処理</a></li>
   </ul>
   <li><!-- a href="#reactivity" -->リアクティブプログラミング<!-- /a --></li>
-  <li><!-- a href="#live_html" -->Live HTML<!-- /a --></li>
-  <li><!-- a href="#templates" -->テンプレート<!-- /a --></li>
+  <li><!-- a href="#live_html" -->ライブHTML<!-- /a --></li>
+  <li><a href="#templates">テンプレート</a></li>
   <li><a href="#smart_packages">スマートパッケージ</a></li>
-  <li><!-- a href="#deploying" -->デプロイ<!-- /a --></li>
+  <li><a href="#deploying">デプロイ</a></li>
 </ul>
 <dl>
   <dt>原文: <a href="http://docs.meteor.com/#concepts">http://docs.meteor.com/#concepts</a><dt>
@@ -169,7 +169,7 @@ Parties.insert(party);
 <h4>入力データのバリデーション処理</h4>
 <p>Meteor を使うとアプリケーションのコードと publish 関数で JSON タイプの全てのデータを扱うことができます。(実際には Meteor の通信プロトコルはバイナリバッファの様な型をサポートするJSON拡張のEJSONをサポートします。) JavaScript の動的型付けによりアプリケーションで使う変数全てに厳密な型を宣言する必要はありませんが、クライアントよりアプリケーションのコードや publish 関数に渡される引数が期待したものかが保証されれば便利です。</p>
 
-<p>Meteor は引数とその他の値がそれぞれに期待された型かをチェックする軽量なライブラリ (Match API) を提供します。<code>check(username, String)</code> や <code>check(office, \{building: String, room: Number\})</code>の様な形で利用することができます。<code>check</code>は引数が期待しない形であった場合にエラーを投げます。</p>
+<p>Meteor は引数とその他の値がそれぞれに期待された型かをチェックする軽量なライブラリ (Match API) を提供します。<code>check(username, String)</code> や <code>check(office, {building: String, room: Number})</code>の様な形で利用することができます。<code>check</code>は引数が期待しない形であった場合にエラーを投げます。</p>
 
 <p>Meteor はまたアプリケーションのコードと publish 関数の引数をバリデートする便利な機能を提供します。
 
@@ -243,8 +243,134 @@ Session.set("name", "Bob"); // ページは自動的に更新します!
 
 <p><code>Meteor.render</code> は描画を行う関数を引数としてとります。この関数は HTML を表す文字列を返す関数です。</p>
 -->
-<!--a name="templates"></a>
-<h3>テンプレート</h3 -->
+<a name="templates"></a>
+<h3>テンプレート</h3>
+<p>Meteor では簡単に Handlebars や Jade の様なお好みの HTML テンプレート言語を Meteor のライブページ更新技術と共に利用することができます。普段テンプレートを書くのと同じように書くだけで、Meteor にリアルタイムで更新されるように扱われる様になります。</p>
+
+<p>この機能を使うにはプロジェクトの中に .html 拡張子がついたファイルを用意してください。このファイルでは name 属性を持つ &lt;template&gt; タグを作成してくださいテンプレートをこのタグの中においてください。Meteor は事前にテンプレートをコンパイルし、クライアントに送信し、グローバルの Template オブジェクトの関数としてこれを提供します。</p>
+
+<p><strong>現段階では Meteor のパッケージとされている唯一のテンプレートシステムは Handlebars です。Meteor 開発チームに Meteor と一緒にどのテンプレートシステムを使いたいか教えてください。同時に、Handlebar ドキュメント[<a href="http://www.handlebarsjs.com/">英語版</a>] と Meteor Handlebars Extension [<a href="https://github.com/meteor/meteor/wiki/Handlebars">英語版</a>] をご確認ください。</strong></p>
+
+<p>name に hello を設定したテンプレートは Tenplate.hello 関数に様々なデータを渡し呼び出すと描画されます</p>
+
+{% highlight html %}
+<template name="hello">
+  <div class="greeting">こんにちは、{{ "{{first"}}}} {{ "{{last"}}}}! </div>
+</template>
+
+// JavaScript コンソールにて
+> Template.hello({first: "Alyssa", last: "Hacker"});
+ => "<div class="greeting">こんにちは、Alyssa Hacker!</div>"
+{% endhighlight %}
+
+上記の例では文字列が返却されます。テンプレートで<!-- a href="#live_html">ライブHTML機能<!-- /a -->を利用しDOM要素をその場で自動的に更新するには、<a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> を使ってください。
+
+{% highlight javascript %}
+Meteor.render(function () {
+  return Template.hello({first: "Alyssa", last: "Hacker"});
+})
+ => DOM要素を自動的に更新し続けます。
+{% endhighlight %}
+
+<p>テンプレートにデータを組み込む際に最も簡単な方法は JavaScript でヘルパ関数を定義することです。Template.[ テンプレート名] に直接関数を追加するだけです。たとえば、テンプレートでは</p>
+
+{% highlight html %}
+<template name="players">
+  {{ "{{#each topScorers"}}}}
+    <div>{{ "{{name"}}}}</div>
+  {{ "{{/each"}}}}
+</template>
+{% endhighlight %}
+
+<p>テンプレート関数が呼び出されれる際、topScores にデータを与えるかわりに、Template.players に関数を定義します。</p>
+
+{% highlight javascript %}
+Template.players.topScorers = function () {
+  return Users.find({score: {$gt: 100}}, {sort: {score: -1}});
+};
+{% endhighlight %}
+
+<p>この場合、データはデータベースのクエリに由来します。#each にデータベースのカーソラが渡された場合、新しい結果がクエリに入り込むと効率的に全自動でDOMノードの追加、移動を行うよう設定されます。</p>
+
+<p>ヘルパには引数を渡すことができ、関数は現在のテンプレートのデータを this として受け取ります。</p>
+
+{% highlight javascript %}
+// JavaScript ファイルにて
+Template.players.leagueIs = function (league) {
+  return this.league === league;
+};
+{% endhighlight %}
+
+{% highlight html %}
+<template name="players">
+  {{ "{{#each topScorers"}}}}
+    {{ '{{#if leagueIs "junior"'}}}}
+      <div>ジュニアリーグ: {{ "{{name"}}}}</div>
+    {{ "{{/if}}}}
+    {{ '{{#if leagueIs "senior"'}}}}
+      <div>シニアリーグ: {{ "{{name"}}}}</div>
+    {{ "{{/if}}}}
+  {{ "{{/each}}}}
+</template>
+{% endhighlight %}
+
+<p><strong>Handlebars 追加情報: {{ '{{#if leagueIs "junior"'}}}} はブロックヘルパにおける入れ子構造を受け入れる Meteor の拡張にて認められる表現です。( if と leagueIs は技術的にはどちらもヘルパで、標準の Handlebars はここでは leaguesIs は実行をおこないません。</strong></p>
+
+ヘルパには定数を指定することもできます。
+
+{% highlight html %}
+// {{" {{#each sections"}}}} で呼び出してください
+Template.report.sections = ["現状", "課題", "解決策"];
+{% endhighlight %}
+
+最後に、イベントハンドラ群のテーブルを設定する場合テンプレート関数で events 宣言を使うことができます。フォーマットは<a href="{{ site.url }}/apiref/templates.html#Template_Event_Maps">イベントマップ</a>にまとめています。イベントハンドラ内の this はイベントを発行した要素のデータコンテキストとなります。
+
+{% highlight html %}
+<template name="scores">
+  {{ "{{#each player"}}}}
+    {{ "{{> playerScore"}}}}
+  {{ "{{/each"}}}}
+</template>
+
+<template name="playerScore">
+  <div>{{" {{name"}}}}: {{" {{score"}}}}
+    <span class="givePoints">得点を与える</span>
+  </div>
+</template>
+{% endhighlight %}
+
+{% highlight javascript %}
+Template.playerScore.events({
+  'click .givePoints': function () {
+    Users.update(this._id, {$inc: {score: 2}});
+  }
+});
+{% endhighlight %}
+
+まとめると、任意のデータをテンプレートに組み込む例は下掲のようになり、データに変更が加えられた時に自動的に更新されます。さらなる議論についてはライブHTMLをご確認ください。
+
+{% highlight html %}
+<template name="forecast">
+  <div>今夜は{{ "{{prediction"}}}}天気となる見込</div>
+</template>
+{% endhighlight %}
+
+{% highlight javascript %}
+// JavaScript: 反応可能となるヘルパ関数
+Template.forecast.prediction = function () {
+  return Session.get("weather");
+};
+{% endhighlight %}
+
+{% highlight text %}
+> Session.set("weather", "くもった");
+> document.body.appendChild(Meteor.render(Template.forecast));
+DOMでは:  <div>今夜はくもった天気となる見込</div>
+
+> Session.set("weather", "寒く乾燥した");
+DOMでは:  <div>今夜は寒く乾燥した天気となる見込</div>
+{% endhighlight %}
+
 <a name="smart_packages"></a>
 <h3>スマートパッケージ</h3>
 
@@ -262,8 +388,55 @@ Session.set("name", "Bob"); // ページは自動的に更新します!
 <p>`meteor list` を使うと利用可能なパッケージのリストが確認できます。`meteor add` でパッケージをプロジェクトに追加することができます。`meteor remove` でそれらを削除することができます。</p>
 
 <!-- TODO to prepare translation of api-packages in the apiref -->
-<strong>パッケージ API は頻繁に変更されていて、ドキュメントもないため、現在の時点ではパッケージを作ることはできません。乞うご期待。</strong>
+<p><strong>パッケージ API は頻繁に変更されていて、ドキュメントもないため、現在の時点ではパッケージを作ることはできません。乞うご期待。</strong></p>
 
-<!-- a name="deploying"></a>
-<h3>デプロイ</h3 -->
+<a name="deploying"></a>
+<h3>デプロイ</h3>
+
+<p>Meteor は最高のアプリケーションサーバです。インターネット上でアプリケーションを提供する際に必要なすべてを提供します。他にあなたが用意しなければならないのは、JavaScript、HTML そして CSS だけです。</p>
+
+<h4>Meteor のインフラにデプロイする</h4>
+
+<p>meteor deploy を使うと最も簡単にアプリケーションをデプロイできます。Meteor 開発チームがこの方法を提供しているのは、チームが個人的に常に「簡単に、創造性を奪うことなく、アプリケーションのアイデアを着想し、週末2日で具体化させ、世界から利用できる状態にする方法」を求めているためです。</p>
+
+{% highlight bash %}
+$ meteor deploy myapp.meteor.com
+{% endhighlight %}
+
+<p>作成したアプリケーションは myapp.meteor.com ですぐに利用可能になります。このホスト名に対しての最初のデプロイの場合は、Meteor は アプリケーション用の空のデータベースを作成します。更新版をデプロイしたい場合、Meteor は既にあるデータを持ち越し、コードのみを入れ替えます。</p>
+
+<p>独自に用意したドメインにデプロイすることもできます。(ご利用のDNSサーバにて) 利用したいホスト名の CNAME に origin.meteor.com を設定し、その名前にデプロイしてください。</p>
+
+{% highlight bash %}
+$ meteor deploy www.myapp.com
+{% endhighlight %}
+
+<p>このサービスは Meteor の機能を体験を目的とした無料のサービスとして Meteor 開発チームにより提供されています。内部できなベータ版やデモなどを素早く提供する際にも有用でしょう。<p>
+
+<h4>独自のインフラストラクチャで運用する</h4>
+
+<p>アプリケーションをお使いのインフラストラクチャや、Heroku の様なホスティングプロバイダ上で運用することもできます。<p>
+
+<p>はじめるにあたり、下記を実行して下さい。</p>
+
+{% highlight bash %}
+$ meteor bundle myapp.tgz
+{% endhighlight %}
+
+<p>このコマンドは tarball の形ですべてを含んだ Node.js のアプリケーションを生成します。このアプリケーションを運用するにあたり、Node.js 0.8 と MongoDB サーバを用意する必要があります。その後、アプリケーションが待機 (リッスン) する HTTP ポートと MongoDB のエンドポイントを指定し node を実行すると アプリケーションを実行することができます。もし MongoDB サーバをまだ用意していないのであれば、<a href="http://mongohq.com/">MongoHQ</a> のMeteor 開発チームのパートナをおすすめすめできます。</p>
+
+{% highlight bash %}
+$ PORT=3000 MONGO_URL=mongodb://localhost:27017/myapp node bundle/main.js
+{% endhighlight %}
+
+<p>パッケージによっては、他の環境変数を必要とする場合もあります (たとえば、email パッケージは MAIL_URL 環境変数を必要とします) 。</p>
+
+<p><strong>現状、バンドルはそのバンドルが作成されたプラットフォーム上のみで実行可能です。異なるプラットフォーム上で実行するには、バンドルの中に含まれるネイティブパッケージをビルドしなおす必要があります。これを行うには、npm が利用可能であることを確認し、次のコマンドを実行してください。</strong></p>
+
+{% highlight bash %}
+$ cd bundle/server/node_modules
+$ rm -r fibers
+$ npm install fibers@1.0.0
+{% endhighlight %}
+
 </article>
