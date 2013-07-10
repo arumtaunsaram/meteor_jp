@@ -7,8 +7,8 @@
     <li><a href="#data_and_security-authentication_and_user_accounts">認証とユーザアカウント</a></li>
     <li><a href="#data_and_security-input_validation">入力データのバリデーション処理</a></li>
   </ul>
-  <li><!-- a href="#reactivity" -->リアクティブプログラミング<!-- /a --></li>
-  <li><!-- a href="#live_html" -->ライブHTML<!-- /a --></li>
+  <li><a href="#reactivity">リアクティブプログラミング</a></li>
+  <li><a href="#live_html">ライブHTML</a></li>
   <li><a href="#templates">テンプレート</a></li>
   <li><a href="#smart_packages">スマートパッケージ</a></li>
   <li><a href="#deploying">デプロイ</a></li>
@@ -17,7 +17,7 @@
   <dt>原文: <a href="http://docs.meteor.com/#concepts">http://docs.meteor.com/#concepts</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/06/23 - 最新バージョンが0.6.4 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/07/10 (JST) - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -159,14 +159,14 @@ Parties.insert(party);
 <p>上記すべてが集まって、遅延の埋め合わせを行います。クライアントには必要なデータのホヤホヤなコピーがあり、サーバのレスポンスを待つ必要は決してありません。クライアントがデータを変更した時には、最終的な決裁はサーバに委ねるものの、その変更はサーバの承認を待つことなく実行されます。</p>
 
 <a name="data_and_security-authentication_and_user_accounts"></a>
-<h4>認証とユーザアカウント</h4>
+<h3>認証とユーザアカウント</h3>
 
 <p>Meteor は "Meteor Acounts" 機能を提供します。それは最高水準の認証システムです。Secure Remote Password protocol [<a href="http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol">英語版 Wikipedia</a>, <a href="https://access.redhat.com/site/documentation/ja-JP/JBoss_Enterprise_Application_Platform/5/html/Security_Guide/chap-Secure_Remote_Password_Protocol.html">RedHatによる日本語記事</a>] を使った安全なパスワードログインと、Facebook, GitHub, Google, Meetup, Twitter そして新浪微博を含む外部サービスとの間のインターフェイスを提供します。Meteor Acount は 開発者がアプリケーション固有のユーザを保存することができる <code>Meteor.users</code> コレクションを提供します。</p>
 
 <p>Meteor はまたログイン, 入会, パスワード変更, パスワード紛失メールの発行といった一般的な手続きを行うフォームを提供します。"Accouts UI" はたった1行のコードで追加することができます。スマートパッケージ <code>accounts-ui</code> はアプリケーションで利用する外部ログインをセットアップするための設定ウィザードも提供してます。</p>
 
 <a name="data_and_security-input_validation"></a>
-<h4>入力データのバリデーション処理</h4>
+<h3>入力データのバリデーション処理</h3>
 <p>Meteor を使うとアプリケーションのコードと publish 関数で JSON タイプの全てのデータを扱うことができます。(実際には Meteor の通信プロトコルはバイナリバッファの様な型をサポートするJSON拡張のEJSONをサポートします。) JavaScript の動的型付けによりアプリケーションで使う変数全てに厳密な型を宣言する必要はありませんが、クライアントよりアプリケーションのコードや publish 関数に渡される引数が期待したものかが保証されれば便利です。</p>
 
 <p>Meteor は引数とその他の値がそれぞれに期待された型かをチェックする軽量なライブラリ (Match API) を提供します。<code>check(username, String)</code> や <code>check(office, {building: String, room: Number})</code>の様な形で利用することができます。<code>check</code>は引数が期待しない形であった場合にエラーを投げます。</p>
@@ -179,10 +179,10 @@ $ meteor add audit-argument-checks
 
 上記コードを実行すると、引数に対し <code>check</code> を行わないアプリケーションのコードと publish 関数は例外を投げるようになります。
 </p>
-<!---
+
 <a name="reactivity"></a>
-<h3>リアクティブプログラミング</h3>
-Meteor は、データの流れと変更の伝達に主眼を当てた リアクティブプログラミング [<a href="http://en.wikipedia.org/wiki/Reactive_programming">英語版 Wikipedia</a>] の思想を抱えています。すなわち、簡単な命令文でアプリケーションのコードがかけ、コードが参照しているデータに変更があった場合はいつでも自動的に再計算されることを意味しています。
+<h2>リアクティブプログラミング</h2>
+<p>Meteor は、データの流れと変更の伝達に主眼を当てた リアクティブプログラミング [<a href="http://en.wikipedia.org/wiki/Reactive_programming">英語版 Wikipedia</a>] の思想を抱えています。すなわち、簡単な命令文でアプリケーションのコードがかけ、コードが参照しているデータに変更があった場合はいつでも自動的に再計算されることを意味しています。</p>
 
 {% highlight javascript %}
 Deps.autorun(function () {
@@ -190,22 +190,20 @@ Deps.autorun(function () {
 });
 {% endhighlight %}
 
-<p>上記の例 はセッション変数である <code>currentRoomId</code> にもとづくデータの subscribe を設定しています。もし何らかの理由で <code>Session.get("currentRoomId")</code> の値が変更された場合は、引数として与えられた関数は自動的に実行され、古い設定を上書きする形で新しい subscribe を設定します。</p>
+<p>上記の例 (チャットルームクライアントより拝借) はセッション変数である currentRoomId にもとづくデータの subscribe を設定しています。もし何らかの理由で Session.get("currentRoomId") の値が変更された場合は、引数として与えられた関数は自動的に実行され、古い設定を上書きする形で新しい subscribe を設定します。</p>
 
-TODO:
-<p>この自動的な再計算は <code>Session</code> と <code>Deps.autorun</code> が互いに協力して実現します。<code>Deps.autorun</code> は任意の<!-- arbitorary what? ->、依存関係が監視されたデータを内部で新しい値とともに評価し、必要に応じて引数として渡された関数の再実行を行います。一方ではデータを提供する <code>Session</code> の様なものは、呼び出しが行われた式やどのようなデータがリクエストされたかを記憶し、データの変更が行われなときに無効化のシグナルを送る準備をしています。
+<p>この自動的な再計算は Session と Deps.autorun が互いに協力して実現しています。Deps.autorun は内部で任意の依存関係が監視された「反応可能な算出」の計算を行い、必要に応じて引数として渡された関数の再実行を行います。一方ではデータを提供する Session の様なデータ提供側は、呼び出しが行われた式やどのようなデータがリクエストされたかを記憶し、データの変更が行われなときに無効化のシグナルを送る準備をしています。 </p>
+
+<p>この、反応可能な評価と反応可能なデータソースのシンプルなパターンは大きな適応能力を持っています。さらに、subscribe 中断、subscribe の再度呼び出しや正しいタイミングで呼び出されているか保証を行うコードの記述から開発者を解放します。大抵の場合、Meteor を使うことで、エラーが侵入しがちなデータ伝搬クラスすべてを取り除くことができます。
 </p>
 
-<p>この、応答可能な評価と応答可能なデータソースのシンプルなパターンは大きな適応能力を持っています。さらに、subscribe 中断、再 subscribe の呼び出しや正しいタイミングで呼び出されているか保証を行うコードの記述から開発者を解放します。大抵の場合、Meteor を使うことでエラーが侵入しがちなデータ伝搬クラスすべてを取り除くことができます。
-</p>
-
-<p>下記の Meteor の機能はアプリケーションのコードを応答可能な評価として実行します。</p>
+<p>下記の Meteor の機能はアプリケーションのコードを反応可能な評価として実行します。</p>
 <ul>
   <li>テンプレート</li>
   <li><code>Meteor.render</code> と <code>Meteor.renderList</code></li>
   <li><code>Deps.autorun</code></li>
 </ul>
-<p>そして変更を伝搬することができる応答可能なデータソースとして
+<p>そして変更を伝搬することができる反応可能なデータソースとして
 <ul>
   <li><code>Session</code>変数</li>
   <li>コレクションに対するDBクエリ</li>
@@ -216,17 +214,16 @@ TODO:
   <li><code>Meteor.loggingIn</code></li>
 </ul>
 があります。</p>
-<p>さらに、次の機能は <code>stop</code> メソッドを持つオブジェクトを返却し、もし応答可能な評価より呼びだされたら評価が再実行あるいは停止された時に機能は停止されます。</p><!-- 停止と stop が指す内容を要確認 ->
+<p>さらに、次の <code>stop</code> メソッドを持つオブジェクトを返却する関数は、反応可能な評価より呼びだされた場合、算出が再実行あるいは停止された場合に停止されます。</p>
 <ul>
-  <li><code>Deps.autorun</code>(ネストし-入れ子状になっ-ています)</li>
+  <li><code>Deps.autorun</code>(ネストし-入れ子状になっ-たもの)</li>
   <li><code>Meteor.subscribe</code></li>
   <li><code>observe()</code> そしてカーソラの <code>observeChanges()</code> </li>
 </ul>
-<p>Meteor の実装は <code>Deps</code> と呼ばれるパッケージで、<code>Deps</code> は単刀直入です<!-- of what? how? ->。新らしく応答可能なデータソースを1から作成する際には利用することになるでしょう。</p>
--->
-<!---
+<p>Meteor の実装は <code>Deps</code> と呼ばれるパッケージで、<code>Deps</code> はとても短く簡潔です。新らしく反応可能なデータソースを1から作成する際には利用できます。</p>
+
 <a name="live_html"></a>
-<h3>Live HTML</h3>
+<h2>ライブ HTML</h2>
 HTML のテンプレート化はウェブアプリケーションの中心です。Meteor のライブページ更新機能を使うとアプリケーションの HTML を一つの応答として描画することができます、つまり生成に使ったデータの変更を追跡し自動的に更新することができます。</p>
 <p>この選択可能な機能はどんなHTMLテンプレート提供ライブラリとでも、またアプリケーションの中の JavaScript で生成した HTML とでさえ協調が可能です。例をご覧ください。</p>
 
@@ -241,10 +238,20 @@ document.body.appendChild(fragment);
 Session.set("name", "Bob"); // ページは自動的に更新します!
 {% endhighlight %}
 
-<p><code>Meteor.render</code> は描画を行う関数を引数としてとります。この関数は HTML を表す文字列を返す関数です。</p>
--->
+<p><a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> は描画を行う関数を引数としてとります。この関数は HTML を文字列として返す関数です。Meteor.render は自動的に更新される DocumentFragmentを返却します。描画を行う関数にて使用されたデータに変更があると、再実行が行われます。DocumentFragmentの中のDOMノードではその後その場でページのどの部分に挿入されているかに関わらず自分自身を更新します。それは完全なる自動です。<a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a>は<!-- a href="#reactivity" -->リアクティブプログラミング<!-- a -->を使い、描画をおこなう関数がどのデータが利用されているのか判定します。</p>
+
+<p>しかしながら大抵の場合、これらの関数を直接呼び出すことはなく、Handlebars や Jade の様なお好きなパッケージを使うだけで完結できます。render と renderList 関数は新たなテンプレートシステムを開発する方のために設計されています。</p>
+
+<p>Meteor は必要なすべての更新と関数の実行をコードが実行されていない間にのみ実行します。この方法で開発者が任意のコードを実行している最中にDOMが変更されていない保証を提供します。ある場合にはこれとは異なる挙動が必要な場合があるでしょう。たとえば、データベースにレコードを挿入した直後、jQuery の様なライブラリを使い新しい要素が探し出せるよう、DOMの更新を強制したいかもしれません。その場合、<!-- a href -->Deps.flush<!-- /a --> を使いDOMを即座に最新の状態にすることができます。</p>
+
+<p>ライブアップデートの対象のDOM要素が画面上から消え去った際には、自動的に後始末が行われます。コールバックが呼び出され、関連付けられたデータベースのクエリが停止され、更新が停止されます。このため、手打ちの更新ロジックの悩みの種となるゾンビテンプレート [ <a href="http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/">英語版 Backbone のゾンビテンプレートについての解説記事</a> ] について決して思い煩うことはありません。要素を後始末より保護したい場合、イベントループに返却する前、あるいは Deps.flush を実行する前にに要素が画面上にあるか確認してください。</p>
+
+<p>手打ちの場合に頭を抱える要素は他に要素の維持という問題があります。ユーザが &lt;input&gt 要素にテキストを入力していると仮定して、その領域がページの再描画の対象だった場合です。&lt;input&gt;が再生成された時に、ユーザはフォーカス、カーソルの位置、一部を完了させていた入力内容とそのフォーマットを失う苦難を受けることとなります。</p>
+
+<p>この事象もまた Meteor によって解決されます。テンプレートにて <a href="{{ site.url }}/apiref/templates.html#Template_myTemplate_preserve">preserve</a> を設定することで、テンプレートが再描画される際に維持される要素を指定することができます。Meteor は維持の指定がされた要素を囲う要素が再描画される場合でもこの要素を維持し、一方でその子要素を更新し、属性の変更は持ち越します。</p>
+
 <a name="templates"></a>
-<h3>テンプレート</h3>
+<h2>テンプレート</h2>
 <p>Meteor では簡単に Handlebars や Jade の様なお好みの HTML テンプレート言語を Meteor のライブページ更新技術と共に利用することができます。普段テンプレートを書くのと同じように書くだけで、Meteor にリアルタイムで更新されるように扱われる様になります。</p>
 
 <p>この機能を使うにはプロジェクトの中に .html 拡張子がついたファイルを用意してください。このファイルでは name 属性を持つ &lt;template&gt; タグを作成してくださいテンプレートをこのタグの中においてください。Meteor は事前にテンプレートをコンパイルし、クライアントに送信し、グローバルの Template オブジェクトの関数としてこれを提供します。</p>
@@ -314,7 +321,7 @@ Template.players.leagueIs = function (league) {
 </template>
 {% endhighlight %}
 
-<p><strong>Handlebars 追加情報: {{ '{{#if leagueIs "junior"'}}}} はブロックヘルパにおける入れ子構造を受け入れる Meteor の拡張にて認められる表現です。( if と leagueIs は技術的にはどちらもヘルパで、標準の Handlebars はここでは leaguesIs は実行をおこないません。</strong></p>
+<p><strong>Handlebars 追加情報: {{ '{{#if leagueIs "junior"'}}}} はブロックヘルパにおける入れ子構造を受け入れる Meteor の拡張にて認められる表現です。( if と leagueIs は技術的にはどちらもヘルパで、標準の Handlebars はここでは leaguesIs は実行をおこないません。)</strong></p>
 
 ヘルパには定数を指定することもできます。
 
@@ -372,7 +379,7 @@ DOMでは:  <div>今夜は寒く乾燥した天気となる見込</div>
 {% endhighlight %}
 
 <a name="smart_packages"></a>
-<h3>スマートパッケージ</h3>
+<h2>スマートパッケージ</h2>
 
 <p>Meteor は尋常でないほど強力なパッケージシステムを具えています。今まで紹介してきた機能は標準の Meteor パッケージにより実装されています。</p>
 
@@ -391,11 +398,11 @@ DOMでは:  <div>今夜は寒く乾燥した天気となる見込</div>
 <p><strong>パッケージ API は頻繁に変更されていて、ドキュメントもないため、現在の時点ではパッケージを作ることはできません。乞うご期待。</strong></p>
 
 <a name="deploying"></a>
-<h3>デプロイ</h3>
+<h2>デプロイ</h2>
 
 <p>Meteor は最高のアプリケーションサーバです。インターネット上でアプリケーションを提供する際に必要なすべてを提供します。他にあなたが用意しなければならないのは、JavaScript、HTML そして CSS だけです。</p>
 
-<h4>Meteor のインフラにデプロイする</h4>
+<h3>Meteor のインフラにデプロイする</h3>
 
 <p>meteor deploy を使うと最も簡単にアプリケーションをデプロイできます。Meteor 開発チームがこの方法を提供しているのは、チームが個人的に常に「簡単に、創造性を奪うことなく、アプリケーションのアイデアを着想し、週末2日で具体化させ、世界から利用できる状態にする方法」を求めているためです。</p>
 
@@ -413,7 +420,7 @@ $ meteor deploy www.myapp.com
 
 <p>このサービスは Meteor の機能を体験を目的とした無料のサービスとして Meteor 開発チームにより提供されています。内部できなベータ版やデモなどを素早く提供する際にも有用でしょう。<p>
 
-<h4>独自のインフラストラクチャで運用する</h4>
+<h3>独自のインフラストラクチャで運用する</h3>
 
 <p>アプリケーションをお使いのインフラストラクチャや、Heroku の様なホスティングプロバイダ上で運用することもできます。<p>
 
