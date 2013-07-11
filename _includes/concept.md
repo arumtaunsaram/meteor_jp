@@ -28,7 +28,7 @@
 Meteor はそういったアプリケーションを書く際に必要となる全てを提供します。</p>
 
 <div class="note">
-* Single Page Application、通称 SPA。ユーザがブラウザ内でコンテンツ間を遷移する時にブラウザにヘッダからフッタまで、
+(訳注) * Single Page Application、通称 SPA。ユーザがブラウザ内でコンテンツ間を遷移する時にブラウザにヘッダからフッタまで、
 全てのHTMLをブラウザに再度読み込ませるのではなく、 Ajax を用い動的にコンテンツデータのみを切り替え、データ通信量、
 描画時のクライアント負荷を最小限に抑えた形の Web アプリケーションを指します。
 </div>
@@ -38,41 +38,41 @@ Meteor はそういったアプリケーションを書く際に必要となる�
 
 <p>Meteor アプリケーションはウェブブラウザ (クライアント) で実行される JavaScript と、 Node.js コンテナの中で動く Meteor サーバで実行される JavaScript、そしてそれを支える HTML フラグメント、CSS 定義、静的データより構成されます。Meteor はそれらの異なるコンポーネントのパッケージ化と配信を自動化します。それだけてなく、ディレクトリ構造のなかでそれらの構造をどう構成するかについて、きわめて柔軟に対応します。</p>
 
-<p>サーバ側の唯一のデータは JavaScript です。Meteor は (<code>client/</code> ディレクトリと <code>public/</code> ディレクトリ配下のファイルを除き) 全ての JavaScript ファイルをかき集め Fiber の中の Node.js サーバインスタンスにてそれらを読み込みます。Meteor では、サーバ側のコードは1つのリクエストに対し1つのスレッドの中で実行されます (Node の典型的な非同期コールバックのスタイルとは異なります)。Meteor 開発チームはこの同期実行モデルが典型的な Meteor アプリケーションに、より合致していると考えます。</p>
+<p>サーバ側の唯一のデータは JavaScript です。Meteor は (client/ ディレクトリと public/ ディレクトリ配下のファイルを除き) 全ての JavaScript ファイルをかき集め Fiber* の中の Node.js サーバインスタンスにてそれらを読み込みます。Meteor では、サーバ側のコードは1つのリクエストに対し1つのスレッドの中で実行されます (Node の典型的な非同期コールバックのスタイルとは異なります)。Meteor 開発チームはこの同期実行モデルが典型的な Meteor アプリケーションに、より合致していると考えます。</p>
 
 <div class="note">
-* fiber: Node.js アプリケーションを同期的なプログラミングスタイルで記述することができる Node.js のサードパーティによる拡張機能。
+(訳注) * Fiber: Node.js アプリケーションを同期的なプログラミングスタイルで記述することができる Node.js のサードパーティによる拡張機能。
 </div>
 
-<p>クライアントサイドではより多くの形のファイルが存在します。Meteor は (<code>server/</code> ディレクトリと <code>public/</code> ディレクトリ配下を除き) 全ての JavaScript ファイルをかき集め、軽量化を行いそれぞれのクライアントに配信します。アプリケーション向けに、1つの JavaScript ファイルを使うか、ディレクトリ別に階層化するか、それらの中間を採用するかは自由です。</p>
+<p>クライアントサイドではより多くの形のファイルが存在します。Meteor は (server/ ディレクトリと public/ ディレクトリ配下を除き) 全ての JavaScript ファイルをかき集め、軽量化を行いそれぞれのクライアントに配信します。アプリケーション向けに、1つの JavaScript ファイルを使うか、ディレクトリ別に階層化するか、それらの中間を採用するかは自由です。</p>
 
-<p>いくつかの JavaScript ライブラリは <code>client/compatibility/</code> ディレクトリに配置した時にだけ有効となります。このディレクトリの中のファイルは新しい変数スコープへとラップされることなく実行されます。これはそれぞれのファイル空間のグローバル変数として宣言された変数がグローバル変数となることを意味します。くわえて、これらのファイルは他のクライアントサイド JavaScript が実行される前に実行されます。</p>
+<p>いくつかの JavaScript ライブラリは client/compatibility/ ディレクトリに配置した時にだけ有効となります。このディレクトリの中のファイルは新しい変数スコープへとラップされることなく実行されます。これはそれぞれのファイル空間のグローバル変数として宣言された変数がグローバル変数となることを意味します。くわえて、これらのファイルは他のクライアントサイド JavaScript が実行される前に実行されます。</p>
 
-<p><code>client/</code>, <code>server/</code>, <code>tests/</code>のいずれかのディレクトリ以外に配置されたファイルはクライアントサイドでも、サーバサイドでも読み込まれます! モデルの定義そしてその他の機能のために利用して下さい。Meteor はコードが実行されているのがクライアントサイドか、サーバサイドかによって挙動を変更するための <code>isClient</code> そして <code>isServer</code> という変数を提供しています。(<code>test/</code> と名付けられたディレクトリに配置されたファイルはいかなる場所においても読み込まれません)。</p>
+<p>client/, server/, tests/のいずれかのディレクトリ以外に配置されたファイルはクライアントサイドでも、サーバサイドでも読み込まれます! モデルの定義そしてその他の機能のために利用して下さい。Meteor はコードが実行されているのがクライアントサイドか、サーバサイドかによって挙動を変更するための isClient そして isServer という変数を提供しています。(test/ と名付けられたディレクトリに配置されたファイルはいかなる場所においても読み込まれません)。</p>
 </p>
 
-<p>パスワードや認証の手順が含まれるような機密性の高いコードは <code>server/</code> ディレクトリに配置して下さい。</p>
+<p>パスワードや認証の手順が含まれるような機密性の高いコードは server/ ディレクトリに配置して下さい。</p>
 
-<p>CSSファイルも同様にかき集められ、クライアントでは<code>server/</code>と<code>public/</code>配下に配置されたファイルを除き、1つのファイルとして受信されます。</p>
+<p>CSSファイルも同様にかき集められ、クライアントではserver/とpublic/配下に配置されたファイルを除き、1つのファイルとして受信されます。</p>
 
 <p>デバッグの際には開発者モードを使うことでJavaScript と CSS ファイルが結合されずに送信することができます。</p>
 
 <p>Meteor アプリケーションの HTML ファイルはサーバサイドフレームワークとはかなり異なる扱われ方をされます。Meteor は全てのディレクトリの HTML ファイルの&lt;head&gt;タグ、&lt;body&gt;タグそして&lt;template&gt;タグのスキャンを行います。&lt;head&gt;部と&lt;body&gt;部は別々に1つの&lt;head&gt;部と&lt;body&gt;部に結合され、クライアントサイドによる初回読み込み時に送信されます。 </p>
 
-<p>一方 Template 部は JavaScript 関数に変換され、Template オブジェクトより参照可能です。これは HTML テンプレートをクライアントに送信する本当に便利な手法です。更に詳しいことは コンセプト:テンプレート をご確認下さい。 </p>
+<p>一方 Template 部は JavaScript 関数に変換され、Template オブジェクトより参照可能です。これは HTML テンプレートをクライアントに送信する本当に便利な手法です。更に詳しいことは <a href="#templates">コンセプト:テンプレート</a> をご確認下さい。 </p>
 
-<p>最後に、Meteor サーバは <code>public/</code>ディレクトリ配下の全てのファイルを Rails や Django プロジェクトの様に配信します。これは画像や favicon.ico, robots.txt 等を配置する場所です。 </p>
+<p>最後に、Meteor サーバは public/ディレクトリ配下の全てのファイルを Rails や Django プロジェクトの様に配信します。これは画像や favicon.ico, robots.txt 等を配置する場所です。 </p>
 
-<p>たとえば <code>Meteor.startup</code> API を利用したり、読み込みの順番に神経質となる必要があるコードを、他のパッケージとの兼ね合いを含めて明示的に制御することができるスマートパッケージに移行したりすることは、読み込みの順番に神経質なコードを書く際にベストな方法です。しかしながら、時によってはアプリケーションの読み込み順序への依存は避けられないこともあります。アプリケーションの中の JavaScript ファイルと CSS ファイルは次のルールによって読み込まれます。</p>
+<p>たとえば Meteor.startup API を利用したり、読み込みの順番に神経質となる必要があるコードを、他のパッケージとの兼ね合いを含めて明示的に制御することができるスマートパッケージに移行したりすることは、読み込みの順番に神経質なコードを書く際にベストな方法です。しかしながら、時によってはアプリケーションの読み込み順序への依存は避けられないこともあります。アプリケーションの中の JavaScript ファイルと CSS ファイルは次のルールによって読み込まれます。</p>
 <ul>
-  <li>アプリケーションルートの <code>lib/</code> ディレクトリにあるファイルが最初に読み込まれます。</li>
+  <li>アプリケーションルートの lib/ ディレクトリにあるファイルが最初に読み込まれます。</li>
   <li>main.* に合致するファイルが他より先に読み込まれます。</li>
-  <li>サブディレクトリに配置されたファイルが親ディレクトリよりも先に読み込まれます。つまり一番深い改装にあるファイルが最初(<code>lib/</code>配下の次)に読み込まれます。ルートディレクトリに配置されたファイルは (main.*に合致しないのであれば) 後に読み込まれます。
+  <li>サブディレクトリに配置されたファイルが親ディレクトリよりも先に読み込まれます。つまり一番深い改装にあるファイルが最初(lib/配下の次)に読み込まれます。ルートディレクトリに配置されたファイルは (main.*に合致しないのであれば) 後に読み込まれます。
   <li>ディレクトリ内ではファイル名のアルファベット順に読み込まれます。</li>
 </li>
 </ul>
 
-<p>上記のルールは掛け合わされ、その結果、例えば<code>lib/</code>ディレクトリの中でまたアルファベット順に読み込まれます。そして複数の main.js ファイルが (いくつかのディレクトリに) 存在すれば、サブディレクトリに配置されたものが先行して読み込まれます。</p>
+<p>上記のルールは掛け合わされ、その結果、例えばlib/ディレクトリの中でまたアルファベット順に読み込まれます。そして複数の main.js ファイルが (いくつかのディレクトリに) 存在すれば、サブディレクトリに配置されたものが先行して読み込まれます。</p>
 <a name="data_and_security"></a>
 <h2>データとセキュリティ</h2>
 <p> Meteor はクライアントに配布されるコードをローカルのデータベースとやり合う様にシンプルにします。個別のRPCエンドポイント作成やサーバからの返却の遅延を防ぐため手動でクライアントにデータをキャッシュしたり、データが変更されるたびに更新のメッセージを各クライアントに向け調整して配信する等を必要としない簡潔、シンプル、そして安全なアプローチです。 </p>
@@ -85,7 +85,7 @@ Meteor はそういったアプリケーションを書く際に必要となる�
 
 <p>全ての Meteor クライアントは in-memory のデータベースキャッシュを含んでいます。クライアントサイドのキャッシュを管理するため、サーバは一連の JSON ドキュメント (≒DBに保存されたレコード) を publish し、クライアントはそれらを subscribe します。</p>
 
-<p>現存する多くの Meteor アプリは、他のデータベースへのサポートも準備中ではありますが、その絶妙の相性より MongoDB をデータベースとして利用しています。 <code>Meteor.Collection</code> クラスは Mongo の collection の宣言とその操作のため利用され、Meteor の Mongo クライアントエミュレータである <code>Meteor.Collection</code> はクライアントサイド、サーバサイド双方のコードから利用することができます。</p>
+<p>現存する多くの Meteor アプリは、他のデータベースへのサポートも準備中ではありますが、その絶妙の相性より MongoDB をデータベースとして利用しています。 Meteor.Collection クラスは Mongo の collection の宣言とその操作のため利用され、Meteor の Mongo クライアントエミュレータである Meteor.Collection はクライアントサイド、サーバサイド双方のコードから利用することができます。</p>
 
 {% highlight javascript %}
 // collection を宣言します
@@ -101,7 +101,7 @@ Messages.insert({text: "Hello world", room: myRooms[0]._id});
 Parties.insert({name: "Super Bowl Party"});
 {% endhighlight %}
 
-<p>それぞれのドキュメントセット (≒テーブル内のレコード群) はサーバで publish 関数を使い宣言されます。この publish 関数はクライアントがドキュメントセットを subscribe するとき毎回実行されます。ドキュメントセットに含まれるデータは大抵の場合はデータベースクエリを publish するためのものです。</p>
+<p>それぞれのドキュメントセット (訳注≒テーブル内のレコード群) はサーバで publish 関数を使い宣言されます。この publish 関数はクライアントがドキュメントセットを subscribe するとき毎回実行されます。ドキュメントセットに含まれるデータは大抵の場合はデータベースクエリを publish するためのものです。</p>
 
 {% highlight javascript %}
 // サーバサイド: 全ての Room ドキュメントを publish します
@@ -161,15 +161,15 @@ Parties.insert(party);
 <a name="data_and_security-authentication_and_user_accounts"></a>
 <h3>認証とユーザアカウント</h3>
 
-<p>Meteor は "Meteor Acounts" 機能を提供します。それは最高水準の認証システムです。Secure Remote Password protocol [<a href="http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol">英語版 Wikipedia</a>, <a href="https://access.redhat.com/site/documentation/ja-JP/JBoss_Enterprise_Application_Platform/5/html/Security_Guide/chap-Secure_Remote_Password_Protocol.html">RedHatによる日本語記事</a>] を使った安全なパスワードログインと、Facebook, GitHub, Google, Meetup, Twitter そして新浪微博を含む外部サービスとの間のインターフェイスを提供します。Meteor Acount は 開発者がアプリケーション固有のユーザを保存することができる <code>Meteor.users</code> コレクションを提供します。</p>
+<p>Meteor は "Meteor Acounts" 機能を提供します。それは最高水準の認証システムです。Secure Remote Password protocol [<a href="http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol">英語版 Wikipedia</a>, <a href="https://access.redhat.com/site/documentation/ja-JP/JBoss_Enterprise_Application_Platform/5/html/Security_Guide/chap-Secure_Remote_Password_Protocol.html">RedHatによる日本語記事</a>] を使った安全なパスワードログインと、Facebook, GitHub, Google, Meetup, Twitter そして新浪微博を含む外部サービスとの間のインターフェイスを提供します。Meteor Acount は 開発者がアプリケーション固有のユーザを保存することができる Meteor.users コレクションを提供します。</p>
 
-<p>Meteor はまたログイン, 入会, パスワード変更, パスワード紛失メールの発行といった一般的な手続きを行うフォームを提供します。"Accouts UI" はたった1行のコードで追加することができます。スマートパッケージ <code>accounts-ui</code> はアプリケーションで利用する外部ログインをセットアップするための設定ウィザードも提供してます。</p>
+<p>Meteor はまたログイン, 入会, パスワード変更, パスワード紛失メールの発行といった一般的な手続きを行うフォームを提供します。"Accouts UI" はたった1行のコードで追加することができます。スマートパッケージ accounts-ui はアプリケーションで利用する外部ログインをセットアップするための設定ウィザードも提供してます。</p>
 
 <a name="data_and_security-input_validation"></a>
 <h3>入力データのバリデーション処理</h3>
 <p>Meteor を使うとアプリケーションのコードと publish 関数で JSON タイプの全てのデータを扱うことができます。(実際には Meteor の通信プロトコルはバイナリバッファの様な型をサポートするJSON拡張のEJSONをサポートします。) JavaScript の動的型付けによりアプリケーションで使う変数全てに厳密な型を宣言する必要はありませんが、クライアントよりアプリケーションのコードや publish 関数に渡される引数が期待したものかが保証されれば便利です。</p>
 
-<p>Meteor は引数とその他の値がそれぞれに期待された型かをチェックする軽量なライブラリ (Match API) を提供します。<code>check(username, String)</code> や <code>check(office, {building: String, room: Number})</code>の様な形で利用することができます。<code>check</code>は引数が期待しない形であった場合にエラーを投げます。</p>
+<p>Meteor は引数とその他の値がそれぞれに期待された型かをチェックする軽量なライブラリ (Match API) を提供します。check(username, String) や check(office, {building: String, room: Number})の様な形で利用することができます。checkは引数が期待しない形であった場合にエラーを投げます。</p>
 
 <p>Meteor はまたアプリケーションのコードと publish 関数の引数をバリデートする便利な機能を提供します。
 
@@ -177,7 +177,7 @@ Parties.insert(party);
 $ meteor add audit-argument-checks
 {% endhighlight %}
 
-上記コードを実行すると、引数に対し <code>check</code> を行わないアプリケーションのコードと publish 関数は例外を投げるようになります。
+上記コードを実行すると、引数に対し check を行わないアプリケーションのコードと publish 関数は例外を投げるようになります。
 </p>
 
 <a name="reactivity"></a>
@@ -200,27 +200,27 @@ Deps.autorun(function () {
 <p>下記の Meteor の機能はアプリケーションのコードを反応可能な評価として実行します。</p>
 <ul>
   <li>テンプレート</li>
-  <li><code>Meteor.render</code> と <code>Meteor.renderList</code></li>
-  <li><code>Deps.autorun</code></li>
+  <li>Meteor.render と Meteor.renderList</li>
+  <li>Deps.autorun</li>
 </ul>
 <p>そして変更を伝搬することができる反応可能なデータソースとして
 <ul>
-  <li><code>Session</code>変数</li>
+  <li>Session変数</li>
   <li>コレクションに対するDBクエリ</li>
-  <li><code>Meteor.status</code></li>
-  <li>subscribe ハンドラの <code>ready()</code>メソッド</li>
-  <li><code>Meteor.user</code></li>
-  <li><code>Meteor.userId</code></li>
-  <li><code>Meteor.loggingIn</code></li>
+  <li>Meteor.status</li>
+  <li>subscribe ハンドラの ready()メソッド</li>
+  <li>Meteor.user</li>
+  <li>Meteor.userId</li>
+  <li>Meteor.loggingIn</li>
 </ul>
 があります。</p>
-<p>さらに、次の <code>stop</code> メソッドを持つオブジェクトを返却する関数は、反応可能な評価より呼びだされた場合、算出が再実行あるいは停止された場合に停止されます。</p>
+<p>さらに、次の stop メソッドを持つオブジェクトを返却する関数は、反応可能な評価より呼びだされた場合、算出が再実行あるいは停止された場合に停止されます。</p>
 <ul>
-  <li><code>Deps.autorun</code>(ネストし-入れ子状になっ-たもの)</li>
-  <li><code>Meteor.subscribe</code></li>
-  <li><code>observe()</code> そしてカーソラの <code>observeChanges()</code> </li>
+  <li>Deps.autorun(ネストし-入れ子状になっ-たもの)</li>
+  <li>Meteor.subscribe</li>
+  <li>observe() そしてカーソラの observeChanges() </li>
 </ul>
-<p>Meteor の実装は <code>Deps</code> と呼ばれるパッケージで、<code>Deps</code> はとても短く簡潔です。新らしく反応可能なデータソースを1から作成する際には利用できます。</p>
+<p>Meteor の実装は Deps と呼ばれるパッケージで、Deps はとても短く簡潔です。新らしく反応可能なデータソースを1から作成する際には利用できます。</p>
 
 <a name="live_html"></a>
 <h2>ライブ HTML</h2>
@@ -238,7 +238,7 @@ document.body.appendChild(fragment);
 Session.set("name", "Bob"); // ページは自動的に更新します!
 {% endhighlight %}
 
-<p><a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> は描画を行う関数を引数としてとります。この関数は HTML を文字列として返す関数です。Meteor.render は自動的に更新される DocumentFragmentを返却します。描画を行う関数にて使用されたデータに変更があると、再実行が行われます。DocumentFragmentの中のDOMノードではその後その場でページのどの部分に挿入されているかに関わらず自分自身を更新します。それは完全なる自動です。<a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a>は<!-- a href="#reactivity" -->リアクティブプログラミング<!-- a -->を使い、描画をおこなう関数がどのデータが利用されているのか判定します。</p>
+<p><a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> は描画を行う関数を引数としてとります。この関数は HTML を文字列として返す関数です。Meteor.render は自動的に更新される DocumentFragmentを返却します。描画を行う関数にて使用されたデータに変更があると、再実行が行われます。DocumentFragmentの中のDOMノードではその後その場でページのどの部分に挿入されているかに関わらず自分自身を更新します。それは完全なる自動です。<a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> は<a href="#reactivity">リアクティブプログラミング</a>を使い、描画をおこなう関数がどのデータが利用されているのか判定します。</p>
 
 <p>しかしながら大抵の場合、これらの関数を直接呼び出すことはなく、Handlebars や Jade の様なお好きなパッケージを使うだけで完結できます。render と renderList 関数は新たなテンプレートシステムを開発する方のために設計されています。</p>
 
@@ -258,7 +258,7 @@ Session.set("name", "Bob"); // ページは自動的に更新します!
 
 <p><strong>現段階では Meteor のパッケージとされている唯一のテンプレートシステムは Handlebars です。Meteor 開発チームに Meteor と一緒にどのテンプレートシステムを使いたいか教えてください。同時に、Handlebar ドキュメント[<a href="http://www.handlebarsjs.com/">英語版</a>] と Meteor Handlebars Extension [<a href="https://github.com/meteor/meteor/wiki/Handlebars">英語版</a>] をご確認ください。</strong></p>
 
-<p>name に hello を設定したテンプレートは Tenplate.hello 関数に様々なデータを渡し呼び出すと描画されます</p>
+<p>name に hello を設定したテンプレートは Tenplate.hello 関数に様々なデータを渡し呼び出すことで描画されます</p>
 
 {% highlight html %}
 <template name="hello">
@@ -270,7 +270,7 @@ Session.set("name", "Bob"); // ページは自動的に更新します!
  => "<div class="greeting">こんにちは、Alyssa Hacker!</div>"
 {% endhighlight %}
 
-上記の例では文字列が返却されます。テンプレートで<!-- a href="#live_html">ライブHTML機能<!-- /a -->を利用しDOM要素をその場で自動的に更新するには、<a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> を使ってください。
+上記の例では文字列が返却されます。テンプレートで<a href="#live_html">ライブHTML機能</a>を利用しDOM要素をその場で自動的に更新するには、<a href="{{ site.url }}/apiref/templates.html#Meteor_render">Meteor.render</a> を使ってください。
 
 {% highlight javascript %}
 Meteor.render(function () {
@@ -279,7 +279,7 @@ Meteor.render(function () {
  => DOM要素を自動的に更新し続けます。
 {% endhighlight %}
 
-<p>テンプレートにデータを組み込む際に最も簡単な方法は JavaScript でヘルパ関数を定義することです。Template.[ テンプレート名] に直接関数を追加するだけです。たとえば、テンプレートでは</p>
+<p>テンプレートにデータを組み込む際に最も簡単な方法は JavaScript でヘルパ関数を定義する方法です。Template.[テンプレート名] に直接関数を追加するだけです。たとえば、テンプレートでは</p>
 
 {% highlight html %}
 <template name="players">
@@ -321,11 +321,11 @@ Template.players.leagueIs = function (league) {
 </template>
 {% endhighlight %}
 
-<p><strong>Handlebars 追加情報: {{ '{{#if leagueIs "junior"'}}}} はブロックヘルパにおける入れ子構造を受け入れる Meteor の拡張にて認められる表現です。( if と leagueIs は技術的にはどちらもヘルパで、標準の Handlebars はここでは leaguesIs は実行をおこないません。)</strong></p>
+<p><strong>Handlebars 追加情報: {{ '{{#if leagueIs "junior"'}}}} はブロックヘルパにおける入れ子構造を受け入れる Meteor の拡張にて認められる表現です。( if と leagueIs は技術的にはどちらもヘルパで、標準の Handlebars はここでは leaguesIs は実行をしません。)</strong></p>
 
 ヘルパには定数を指定することもできます。
 
-{% highlight html %}
+{% highlight javascript %}
 // {{" {{#each sections"}}}} で呼び出してください
 Template.report.sections = ["現状", "課題", "解決策"];
 {% endhighlight %}
