@@ -258,7 +258,7 @@ Session.set("name", "Bob"); // ページは自動的に更新します!
 
 <p><strong>現段階では Meteor のパッケージとされている唯一のテンプレートシステムは Handlebars です。Meteor 開発チームに Meteor と一緒にどのテンプレートシステムを使いたいか教えてください。同時に、Handlebar ドキュメント[<a href="http://www.handlebarsjs.com/">英語版</a>] と Meteor Handlebars Extension [<a href="https://github.com/meteor/meteor/wiki/Handlebars">英語版</a>] をご確認ください。</strong></p>
 
-<p>name に hello を設定したテンプレートは Tenplate.hello 関数に様々なデータを渡し呼び出すことで描画されます</p>
+<p>name に hello を設定したテンプレートは Template.hello 関数に様々なデータを渡し呼び出すことで描画されます</p>
 
 {% highlight html %}
 <template name="hello">
@@ -313,11 +313,11 @@ Template.players.leagueIs = function (league) {
   {{ "{{#each topScorers"}}}}
     {{ '{{#if leagueIs "junior"'}}}}
       <div>ジュニアリーグ: {{ "{{name"}}}}</div>
-    {{ "{{/if}}}}
+    {{ '{{/if'}}}}
     {{ '{{#if leagueIs "senior"'}}}}
       <div>シニアリーグ: {{ "{{name"}}}}</div>
-    {{ "{{/if}}}}
-  {{ "{{/each}}}}
+    {{ '{{/if'}}}}
+  {{ '{{/each'}}}}
 </template>
 {% endhighlight %}
 
@@ -354,7 +354,7 @@ Template.playerScore.events({
 });
 {% endhighlight %}
 
-まとめると、任意のデータをテンプレートに組み込む例は下掲のようになり、データに変更が加えられた時に自動的に更新されます。さらなる議論についてはライブHTMLをご確認ください。
+まとめると、任意のデータをテンプレートに組み込む例は下掲のようになり、データに変更が加えられた時に自動的に更新されます。さらなる議論については<a href="#live_html">ライブHTML</a>をご確認ください。
 
 {% highlight html %}
 <template name="forecast">
@@ -392,7 +392,7 @@ DOMでは:  <div>今夜は寒く乾燥した天気となる見込</div>
 
 <p>Minimongo、セッションオブジェクトや反応可能な Handlebar テンプレートを含む多くのコアの Meteor の機能は、すべての Meteor アプリケーションに自動的に含まれる内部的なパッケージとして実装されています。</p>
 
-<p>`meteor list` を使うと利用可能なパッケージのリストが確認できます。`meteor add` でパッケージをプロジェクトに追加することができます。`meteor remove` でそれらを削除することができます。</p>
+<p>meteor list を使うと利用可能なパッケージのリストが確認できます。meteor add でパッケージをプロジェクトに追加することができます。 `meteor remove` でそれらを削除することができます。</p>
 
 <!-- TODO to prepare translation of api-packages in the apiref -->
 <p><strong>パッケージ API は頻繁に変更されていて、ドキュメントもないため、現在の時点ではパッケージを作ることはできません。乞うご期待。</strong></p>
