@@ -54,7 +54,7 @@ Meteor のコマンドラインの使用方法に関するヘルプを表示し�
 
 <strong>パスワードによる保護は管理に対しての挙動にのみ有効で、ウェブサイトへのアクセスを制御するわけではありまあせん。かつ、これは Meteor 開発チームが Meteor のアカウント機能を完全に開発するまでの暫定的なハックです。</strong>
 
-<strong>meteor.com 以外のドメイン名を利用する場合、ドメイン名が origin.meteor.com に向いているか確認してください。myapp.com の様なトップレベルのドメインが必要な場合、origin.meteor.com の IP アドレスに合致するものを DNS の A レコードに必要です。</strong>
+<strong>meteor.com 以外のドメイン名を利用する場合、ドメイン名が origin.meteor.com に向いているか確認してください。myapp.com の様なトップレベルのドメインが必要な場合、 DNS の A レコードを origin.meteor.com のIPアドレスに合致させる必要があります。</strong>
 
 --settings オプションを使いアプリケーションのデプロイ時に特定の情報を追加することができます。--settings の引数は JSON 文字列が記載されたファイルです。設定 (setting) ファイル内のオブジェクトはアプリケーションのサーバサイドにて Meteor.settings の形式で参照することができます。
 
