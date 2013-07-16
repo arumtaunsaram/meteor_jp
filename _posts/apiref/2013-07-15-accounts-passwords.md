@@ -31,7 +31,7 @@ accounts-password パッケージにはパスワードベースの認証用の�
   <dt>原文: <a href="http://docs.meteor.com/#accounts_passwords">http://docs.meteor.com/#accounts_passwords</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/07/15 (JST) - 最新バージョンが0.6.4 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/07/17 (JST) - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -62,7 +62,7 @@ __どこでも__
 
 * **password** 文字列型
 
-    対象ユーザのパスワード。これはネットワーク越しでの場合平文では送信されません。
+    対象ユーザのパスワード。これはネットワーク越しでの場合平文では送信され **ません** 。
 
 * **profile** オブジェクト
 
@@ -89,11 +89,11 @@ __クライアントサイド__
 
 * **oldPassword** 文字列型
 
-    ユーザの現在のパスワード。これはネットワーク越しでの場合平文では送信され **ませ** ん。
+    ユーザの現在のパスワード。これはネットワーク越しでの場合平文では送信され **ません** 。
 
 * **newPassword** 文字列型
 
-    ユーザの新しいパスワード。これはネットワーク越しでの場合平文では送信され **ませ** ん。
+    ユーザの新しいパスワード。これはネットワーク越しでの場合平文では送信され **ません** 。
 
 * **callback** 関数
 
@@ -194,7 +194,7 @@ __サーバサイド__
 
 * **email** 文字列型
 
-    省略可能。ユーザのメールを送信するアドレス。アドレスはユーザの email リストである必要があります。デフォルト設定ではリストの中の最初のメールです。
+    省略可能。メールが送信されるユーザのアドレス。アアドレスはユーザの email リストの中に存在しなければなりません。デフォルト設定ではリストの中の最初のメールです。
 
 このメールの中のトークンは [Accounts.resetPassword](#accounts_resetpassword) に渡されるべきです。
 
@@ -215,7 +215,7 @@ __サーバサイド__
 
 * **email** 文字列型
 
-    省略可能。メールが送信されるユーザのメールアドレス。アドレスはユーザの email リストである必要があります。デフォルト設定ではリストの中の最初のメールです。
+    省略可能。メールが送信されるユーザのアドレス。アドレスはユーザの email リストの中に存在しなければなりません。デフォルト設定ではリストの中の最初のメールです。
 
 
 このメールの中のトークンは [Accounts.resetPassword](#accounts_resetpassword) に渡されるべきです。
@@ -227,7 +227,7 @@ __サーバサイド__
 ### Accounts.sendVerificationEmail(userId, [email])
 __サーバサイド__
 
-ユーザがメールアドレスの認証に使うリンクを含むメールを送信します。
+ユーザがメールアドレスの立証に使うリンクを含むメールを送信します。
 
 ### 引数
 
@@ -237,7 +237,7 @@ __サーバサイド__
 
 * **email** 文字列型
 
-    省略可能。メールが送信されるユーザのメールアドレス。アドレスはユーザの email リストである必要があります。デフォルト設定ではリストの中の最初の未認証メールです。
+    省略可能。メールが送信されるユーザのメールアドレス。アドレスはユーザの email リストの中に存在しなければなりません。デフォルト設定ではリストの中の最初の未立証メールです。
 
 このメールの中のトークンは [Accounts.resetPassword](#accounts_resetpassword) に渡されるべきです。
 
@@ -252,7 +252,7 @@ Accounts システムから送信するメールをカスタマイズするオ�
 
 sendResetPasswordEmail, sendEntollmentEmail そして sendVerificationEmail から送信されるメールを作成する際に使用されるいくつかのフィールドを持った Object です。
 
-オブジェクトの下記のフィールドに割り当てることで上書きしてください。
+オブジェクトの下記のフィールドに割り当てることでオーバーライドしてください。
 
 * from: RFC5322 の From アドレスに沿った文字列型。デフォルト設定ではメールは no-reply@meteor.com より送信されます。ユーザのメールからヘルプを求めるメールを受信したい場合、受信可能なメールアドレスを設定してください。
 
@@ -271,13 +271,14 @@ sendResetPasswordEmail, sendEntollmentEmail そして sendVerificationEmail か�
 例:
 
 ~~~ javascript
-Accounts.emailTemplates.siteName = "サイト";
-Accounts.emailTemplates.from = "サイト管理人 <accounts@example.com>";
+Accounts.emailTemplates.siteName = "素敵なサイト";
+Accounts.emailTemplates.from = "素敵なサイトの管理人 <accounts@example.com>";
 Accounts.emailTemplates.enrollAccount.subject = function (user) {
-    return "ようこそサイトへ、" + user.profile.name;
+    return "ようこそ素敵な街へ、" + user.profile.name;
 };
 Accounts.emailTemplates.enrollAccount.text = function (user, url) {
-   return "より良い機能の開発のためアカウントを有効にするには、下記のリンクをクリックするだけで完了です。"
+   return "よりよい未来づくりに、あなたは選びだされました！" + 
+     "下のリンクをクリックするだけで、アカウントが有効になります。"
      + url;
 };
 ~~~
