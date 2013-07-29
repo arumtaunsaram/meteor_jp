@@ -1,0 +1,205 @@
+
+Session provides a global object on the client that you can use to store an arbitrary set of key-value pairs. Use it to store things like the currently selected item in a list.
+
+What's special about Session is that it's reactive. If you call Session.get("currentList") from inside a template, the template will automatically be rerendered whenever Session.set("currentList", x) is called.
+
+
+
+
+
+
+
+
+
+
+Session.set(key, value) Client
+
+Set a variable in the session. Notify any listeners that the value has changed (eg: redraw templates, and rerun any Deps.autorun computations, that called Session.get on this key.)
+
+Arguments
+key String
+The key to set, eg, selectedItem
+
+value EJSON-able object or undefined
+The new value for key
+
+
+
+
+
+
+
+
+
+
+
+
+Example:
+
+Deps.autorun(function () {
+  Meteor.subscribe("chat-history", {room: Session.get("currentRoomId")});
+});
+
+// Causes the function passed to Deps.autorun to be re-run, so
+// that the chat-history subscription is moved to the room "home".
+Session.set("currentRoomId", "home");
+
+
+
+
+
+
+
+
+
+
+
+Session.setDefault(key, value) Client
+
+Set a variable in the session if it is undefined. Otherwise works exactly the same as Session.set.
+
+Arguments
+key String
+The key to set, eg, selectedItem
+
+value EJSON-able object or undefined
+The new value for key
+
+
+
+
+
+
+
+
+
+
+
+
+This is useful in initialization code, to avoid re-initializing a session variable every time a new version of your app is loaded.
+
+
+
+
+
+
+
+
+
+
+Session.get(key) Client
+
+Get the value of a session variable. If inside a reactive computation, invalidate the computation the next time the value of the variable is changed by Session.set. This returns a clone of the session value, so if it's an object or an array, mutating the returned value has no effect on the value stored in the session.
+
+Arguments
+key String
+The name of the session variable to return
+
+
+
+
+
+
+
+
+
+
+
+
+Example:
+
+Session.set("enemy", "Eastasia");
+var frag = Meteor.render(function () {
+  return "<p>We've always been at war with " +
+    Session.get("enemy") + "</p>";
+});
+
+// Page will say "We've always been at war with Eastasia"
+document.body.append(frag);
+
+// Page will change to say "We've always been at war with Eurasia"
+Session.set("enemy", "Eurasia");
+
+
+
+
+
+
+
+
+
+
+
+Session.equals(key, value) Client
+
+Test if a session variable is equal to a value. If inside a reactive computation, invalidate the computation the next time the variable changes to or from the value.
+
+Arguments
+key String
+The name of the session variable to test
+
+value String, Number, Boolean, null, or undefined
+The value to test against
+
+
+
+
+
+
+
+
+
+
+
+
+If value is a scalar, then these two expressions do the same thing:
+
+(1) Session.get("key") === value
+(2) Session.equals("key", value)
+
+
+... but the second one is always better. It triggers fewer invalidations (template redraws), making your program more efficient.
+
+Example:
+
+<template name="postsView">
+{{! Show a dynamically updating list of items. Let the user click on an
+    item to select it. The selected item is given a CSS class so it
+    can be rendered differently. }}
+
+{{#each posts}}
+  {{> postItem }}
+{{/each}}
+</template>
+
+<template name="postItem">
+  <div class="{{postClass}}">{{title}}</div>
+</template>
+
+///// in JS file
+Template.postsView.posts = function() {
+  return Posts.find();
+};
+
+Template.postItem.postClass = function() {
+  return Session.equals("selectedPost", this._id) ?
+    "selected" : "";
+};
+
+Template.postItem.events({
+  'click': function() {
+    Session.set("selectedPost", this._id);
+  }
+});
+
+// Using Session.equals here means that when the user clicks
+// on an item and changes the selection, only the newly selected
+// and the newly unselected items are re-rendered.
+//
+// If Session.get had been used instead of Session.equals, then
+// when the selection changed, all the items would be re-rendered.
+
+
+For object and array session values, you cannot use Session.equals; instead, you need to use the underscore package and write _.isEqual(Session.get(key), value).
+
+
