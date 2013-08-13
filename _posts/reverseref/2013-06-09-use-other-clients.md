@@ -18,3 +18,8 @@ Meteor サーバをAPIサーバとして利用する方法は Meteor 開発チ�
 iOS 向け Objective-C での DDP クライアント実装について
 
 * [DDP library for iOS - Google Groups](https://groups.google.com/forum/#!topic/meteor-core/q8Ylsxe-GZU)
+
+Android (Java) 向け DDP クライアント実装
+
+* [kenyee/android-ddp-client](https://github.com/kenyee/android-ddp-client)
+
