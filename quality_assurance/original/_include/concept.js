@@ -1,6 +1,9 @@
 var page = require('webpage').create();
 
+page.viewportSize = { width: 480, height: 800 };
+
 page.open('http://docs.meteor.com/', function () {
+
 
 	var doc = page.evaluate(function () {
 			/**
@@ -16,12 +19,12 @@ page.open('http://docs.meteor.com/', function () {
 			 */
 		    aboveFolding = elHeading;
 
+		rtn += aboveFolding.innerText || '';
 
 		while(aboveFolding.nextSibling) {
 			if (aboveFolding.nextSibling.tagName && aboveFolding.nextSibling.tagName.toLowerCase() === 'h1') {
 				break;
 			}
-
 			rtn += aboveFolding.nextSibling.innerText || '';
 			aboveFolding = aboveFolding.nextSibling;
 		}
@@ -29,5 +32,6 @@ page.open('http://docs.meteor.com/', function () {
 	});
 	console.log(doc);
 	phantom.exit();
+
 
 });

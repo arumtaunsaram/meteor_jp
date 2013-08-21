@@ -1,5 +1,7 @@
 var page = require('webpage').create();
 
+page.viewportSize = { width: 480, height: 800 };
+
 page.open('http://www.meteor.com/examples/leaderboard', function () {
 
 	var doc = page.evaluate(function () {

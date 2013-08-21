@@ -8,7 +8,7 @@ The name of the collection. If null, creates an unmanaged (unsynchronized) local
 
 Options
 connection Object
-The Meteor connection that will manage this collection, defaults to Meteor if null. Unmanaged (name is null) collections cannot specify a connection.
+The Meteor connection that will manage this collection. Uses the default connection if not specified. Pass null to specify no connection. Unmanaged (name is null) collections cannot specify a connection.
 
 idGeneration String
 The method of generating the _id fields of new documents in this collection. Possible values:
@@ -140,7 +140,7 @@ reactive Boolean
 transform Function
 Overrides transform on the Collection for this cursor. Pass null to disable transformation.
 
-Equivalent to find(selector, options).fetch()[0].collection.insert(doc, [callback]) Anywhere
+Equivalent to find(selector, options).fetch()[0] with options.limit = 1.collection.insert(doc, [callback]) Anywhere
 
 Insert a document in the collection. Returns its unique _id.
 

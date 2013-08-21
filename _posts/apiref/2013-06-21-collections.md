@@ -40,7 +40,7 @@ Meteor はデータをコレクションに保存します。はじめに `new M
   <dt>原文: <a href="http://docs.meteor.com/#collections">http://docs.meteor.com/#collections</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/06/28 - 最新バージョンが0.6.4 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/08/21 (JST) - 最新バージョンが0.6.5 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -61,7 +61,7 @@ __どこでも__
 
 * **connection** オブジェクト
 
-    このコレクションを管理する Meteor の接続オブジェクト。もし null であればデフォルトの `Meteor` となります。name が null の管理されないコレクションは接続オブジェクトを指定することはできません。
+    このコレクションを管理する Meteor の接続オブジェクト。指定されていない場合デフォルトの接続を使用します。name が null の管理されないコレクションは接続オブジェクトを指定することはできません。
 
 * **idGeneration** 文字列型
 
@@ -260,7 +260,7 @@ __どこでも__
 
     `Collection` に対する `transform` 指定内容を差し替えます。transform を無効化する場合には null を渡して下さい。
 
-`find(selector, options).fetch()[0]` に等しいです。
+`options.limit = 1` の状態で `find(selector, options).fetch()[1]` に等しいです。
 
 ---
 <a name="Meteor_collection_insert"></a>

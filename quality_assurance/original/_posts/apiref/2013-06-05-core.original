@@ -6,6 +6,8 @@ Meteor.isServer Anywhere
 
 Boolean variable. True if running in server environment.
 
+Meteor.isServer can be used to limit where code runs, but it does not prevent code from being sent to the client. Any sensitive code that you don't want served to the client, such as code containing passwords or authentication mechanisms, should be kept in the server directory.
+
 Meteor.startup(func) Anywhere
 
 Run code when a client or a server starts.
@@ -14,7 +16,7 @@ Arguments
 func Function
 A function to run on startup.
 
-On a server, the function will run as soon as the server process is finished starting. On a client, the function will run as soon as the DOM is ready.The startup callbacks are called in the same order as the calls to Meteor.startup were made.On a client, startup callbacks from smart packages will be called first, followed by <body> templates from your .html files, followed by your application code.// On server startup, if the database is empty, create some initial data.
+On a server, the function will run as soon as the server process is finished starting. On a client, the function will run as soon as the DOM is ready.The startup callbacks are called in the same order as the calls to Meteor.startup were made.On a client, startup callbacks from packages will be called first, followed by <body> templates from your .html files, followed by your application code.// On server startup, if the database is empty, create some initial data.
 if (Meteor.isServer) {
   Meteor.startup(function () {
     if (Rooms.find().count() === 0) {
@@ -46,6 +48,6 @@ Meteor.settings contains any deployment-specific options that were provided usin
 
 Meteor.release Anywhere
 
-Meteor.release is a string containing the name of the release with which the project was built (for example, "0.6.4"). It is undefined if the project was built using a git checkout of Meteor.
+Meteor.release is a string containing the name of the release with which the project was built (for example, "galaxy-appconfig-2"). It is undefined if the project was built using a git checkout of Meteor.
 
 
