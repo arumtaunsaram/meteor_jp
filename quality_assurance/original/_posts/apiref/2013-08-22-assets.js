@@ -12,7 +12,7 @@ page.open('http://docs.meteor.com/', function () {
 			/**
 				@type {HTMLElement}
 			 */
-		    elHeading = document.getElementById('id'),
+		    elHeading = document.getElementById('assets'),
 			/**
 				@type {HTMLElement}
 			 */
@@ -20,7 +20,7 @@ page.open('http://docs.meteor.com/', function () {
 
 
 		while(aboveFolding.nextSibling) {
-			if (aboveFolding.nextSibling.tagName && aboveFolding.nextSibling.tagName.toLowerCase() === 'h2') {
+			if (aboveFolding.nextSibling.tagName && aboveFolding.nextSibling.tagName.toLowerCase() === 'h1') {
 				break;
 			}
 

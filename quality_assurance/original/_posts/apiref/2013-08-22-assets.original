@@ -1,0 +1,24 @@
+Assets allows server code in a Meteor application to access static server assets, which are located in the private subdirectory of an application's tree.Assets.getText(assetPath, [asyncCallback]) Server
+
+Retrieve the contents of the static server asset as a UTF8-encoded string.
+
+Arguments
+assetPath String
+The path of the asset, relative to the application's private subdirectory.
+
+asyncCallback Function
+Optional callback, which is called asynchronously with the error or result after the function is complete. If not provided, the function runs synchronously.
+
+Assets.getBinary(assetPath, [asyncCallback]) Server
+
+Retrieve the contents of the static server asset as an EJSON Binary.
+
+Arguments
+assetPath String
+The path of the asset, relative to the application's private subdirectory.
+
+asyncCallback Function
+Optional callback, which is called asynchronously with the error or result after the function is complete. If not provided, the function runs synchronously.
+
+Static server assets are included by placing them in the application's private subdirectory. For example, if an application's private subdirectory includes a directory called nested with a file called data.txt inside it, then server code can read data.txt by running:var data = Assets.getText('nested/data.txt');
+
