@@ -12,21 +12,16 @@ page.open('https://docs.meteor.com/', function () {
 			/**
 				@type {HTMLElement}
 			 */
-		    elHeading = document.getElementById('commandline'),
+		    elHeading = document.querySelector('#nav-inner>h1').children[0].innerHTML,
 			/**
 				@type {HTMLElement}
 			 */
 		    aboveFolding = elHeading;
 
 
-		while(aboveFolding.nextSibling) {
-			rtn += aboveFolding.nextSibling.innerText || '';
-			aboveFolding = aboveFolding.nextSibling;
-		}
-		return rtn;
+		return elHeading;
 	});
 	console.log(doc);
 	phantom.exit();
-
 
 });

@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname $0)
 
-if [ "$1"=="update" ]; then
+if [ "$1" == "update" ]; then
 	echo "You gave 'update' option, it will overwrite the existing .original files. Continue? [Y/n]: "
 	read -r input
 

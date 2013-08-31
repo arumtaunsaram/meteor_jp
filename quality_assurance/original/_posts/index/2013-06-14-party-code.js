@@ -1,8 +1,8 @@
 var page = require('webpage').create();
 
-page.viewportSize = { width: 480, height: 800 };
+page.viewportSize = { width: 860, height: 800 };
 
-page.open('http://www.meteor.com/examples/parties', function () {
+page.open('https://www.meteor.com/examples/parties', function () {
 
 	var doc = page.evaluate(function () {
 

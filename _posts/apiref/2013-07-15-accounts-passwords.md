@@ -31,7 +31,7 @@ accounts-password パッケージにはパスワードベースの認証用の�
   <dt>原文: <a href="http://docs.meteor.com/#accounts_passwords">http://docs.meteor.com/#accounts_passwords</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終確認 2013/08/21 (JST) - 最新バージョンが0.6.5 の時点での内容]</li>
+    <li>[訳文の最終確認 2013/08/31 (JST) - 最新バージョンが0.6.5.1 の時点での内容]</li>
     <li>[訳文の最終更新 2013/07/17 (JST) - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>
