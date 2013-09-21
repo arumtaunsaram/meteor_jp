@@ -1,10 +1,17 @@
 @container-width-default: 940px;
 
-body{
 @media (min-width: @responsive-fixedheader-min) {
+body{
 	padding-top: @px-fixed-navbar-height;
 }
+a[name]{
+	display: block;
+	position: relative;
+	top: (@px-fixed-navbar-height * -1);
+	visibility: hidden;
 }
+}
+
 
 // Modify bootstrap style.
 @media (max-width: @responsive-fluid-max) {
