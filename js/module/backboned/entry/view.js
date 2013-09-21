@@ -152,6 +152,11 @@ define(['underscore', 'backbone', 'jquery-appear'], function(_, Backbone, $) {
 			$('#fluidContent').trigger('inject'); 
 
 			dst = self.model.get('link');
+			
+
+			if (! self.model.get('hashFlagment')) {
+				window.scrollTo(0, 0);
+			}
 
 			Backbone.history.navigate(
 				dst , {trigger: false}
