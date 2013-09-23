@@ -31,7 +31,7 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 				@param {?string} path Expected not to include starting '/'.
 			 */
 			, defaultRoute: function (path){
-				//console.log('defaultRoute:' + path);
+				console.log('defaultRoute:' + path);
 				//console.log(typeof path);
 
 				//console.log('step 1');
@@ -60,6 +60,11 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 				var dstId = _.find(ID_SOLID_CONTENT, function (id) {
 					return typeof path === 'string'? path.indexOf(id + '.html') === 0: false;
 				});
+
+				if (typeof ga === 'function') {
+        		    ga('send', 'pageview', path);
+        		}
+
 				//console.log('step 3');
 				if (typeof dstId !== 'undefined') {
 					//console.log('loading a specific content:' + dstId);
@@ -190,7 +195,11 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 		Backbone.history.navigate(
 			path , {trigger: false}
 		);
-		//console.log('pushing state to:' + path);
+
+        if (typeof ga === 'function') {
+            ga('send', 'pageview', path);
+        }
+		// console.log('pushing state to:' + path);
 	}
 	/**
 		@param {HTMLAnchorElement} pmTargetAnchor
@@ -247,6 +256,9 @@ define(['jquery', 'backbone' ,'backboned/entry'], function($, Backbone, Entry) {
 				Backbone.history.navigate(
 					path , {trigger: false}
 				);
+				if (typeof ga === 'function') {
+            	    ga('send', 'pageview', path);
+            	}
 			});
 		}
 	}

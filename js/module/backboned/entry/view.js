@@ -114,10 +114,17 @@ define(['underscore', 'backbone', 'jquery-appear'], function(_, Backbone, $) {
 		   @private
 		 */
 		, expand: function (pmEvt) {
-			console.log('expand...');
+			//console.log('expand...');
+
+			if (pmEvt.currentTarget.tagName.toLowerCase() === 'a') {
+				// Leave execution to click callback function for div element.
+				pmEvt.preventDefault();
+				return;
+			}
+
 			var self = this;
 			
-			console.log(self.model.get('isInspired'));
+			//console.log(self.model.get('isInspired'));
 
 			if (!self.model.get('isInspired')) {
 				self.model.fetch({
@@ -126,8 +133,6 @@ define(['underscore', 'backbone', 'jquery-appear'], function(_, Backbone, $) {
 			} else {
 				self.expandProcedure();
 			}
-			pmEvt.preventDefault();
-			console.log('event has been prevented');
 		}
 
 		/**
@@ -161,6 +166,10 @@ define(['underscore', 'backbone', 'jquery-appear'], function(_, Backbone, $) {
 			Backbone.history.navigate(
 				dst , {trigger: false}
 			);
+
+			if (typeof ga === 'function') {
+				ga('send', 'pageview', dst);
+			}
 		}
 
 		/** 
