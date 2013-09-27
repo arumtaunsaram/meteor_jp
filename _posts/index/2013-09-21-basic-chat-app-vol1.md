@@ -82,7 +82,7 @@ Messages = new Meteor.Collection('messages');
 
 ~~~ javascript
 if (Meteor.isClient) {
-  Template.history.message = function () {
+  Template.history.messages = function () {
     return Messages.find({}, {sort: {cdate: -1}, limit: 30});
   }
 }

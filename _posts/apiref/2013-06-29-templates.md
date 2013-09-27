@@ -144,7 +144,7 @@ Template.myTemplate.helpers({
 
 Handlebars で、このヘルパーは \{\{foo\}\} として実行されます。
 
-次の文法は同等ですが、予約後を使ったプロパティ名に対しては無効です。
+次の文法は同等ですが、予約語を使ったプロパティ名に対しては無効です。
 
 ~~~ javascript
 Template.myTemplate.foo = function () {

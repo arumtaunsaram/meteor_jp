@@ -577,7 +577,7 @@ topPosts.forEach(function (post) {
 
 ---
 <a name="Meteor_Collection_cursor_map"></a>
-### _collection_.forEach(callback)
+### _collection_.map(callback)
 __どこでも__
 
 すべての合致するドキュメントに対しコールバック関数をマップし、配列を返却します。
