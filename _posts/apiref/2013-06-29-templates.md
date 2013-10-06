@@ -360,7 +360,7 @@ Players.update({idleTime: {$gt: 30}}, {$set: {online: false}});
 
 *   **type** 文字列型
 
-    "click", "blue" や "keypress" の様なイベントの種類
+    "click", "blur" や "keypress" の様なイベントの種類
 
 *   **target** DOM要素
 
@@ -416,7 +416,7 @@ Players.update({idleTime: {$gt: 30}}, {$set: {online: false}});
 
 *   **change**
 
-    チェックボックスあるいはラジオボタンの状態が変化しました。テキストフィールドの場合 blue かキーイベントを使い変化に対応してください。
+    チェックボックスあるいはラジオボタンの状態が変化しました。テキストフィールドの場合 blur かキーイベントを使い変化に対応してください。
 
 *   **mouseenter, mouseleave**
 
