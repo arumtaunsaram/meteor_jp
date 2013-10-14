@@ -18,7 +18,7 @@ This collection contains one document per registered user. Here's an example use
     { address: "cool@example.com", verified: true },
     { address: "another@different.com", verified: false }
   ],
-  createdAt: 1349761684042,
+  createdAt: Wed Aug 21 2013 15:16:52 GMT-0700 (PDT),
   profile: {
     // The profile is writable by the user by default.
     name: "Joe Schmoe"
@@ -38,7 +38,7 @@ This collection contains one document per registered user. Here's an example use
 }
 A user document can contain any data you want to store about a user. Meteor treats the following fields specially:username: a unique String identifying the user.
 emails: an Array of Objects with keys address and verified; an email address may belong to at most one user. verified is a Boolean which is true if the user has verified the address with a token sent over email.
-createdAt: a numeric timestamp (milliseconds since January 1 1970) of the time the user document was created.
+createdAt: the Date at which the user document was created.
 profile: an Object which (by default) the user can create and update with any data.
 services: an Object containing data used by particular login services. For example, its reset field contains tokens used by forgot password links, and its resume field contains tokens used to keep you logged in between sessions.
 Like all Meteor.Collections, you can access all documents on the server, but only those specifically published by the server are available on the client.By default, the current user's username, emails and profile are published to the client. You can publish additional fields for the current user with:Meteor.publish("userData", function () {
@@ -58,7 +58,15 @@ Arguments
 callback Function
 Optional callback. Called with no arguments on success, or with a single Error argument on failure.
 
-Meteor.loginWithPassword(user, password, [callback]) Client
+Meteor.logoutOtherClients([callback]) Client
+
+Log out other clients logged in as the current user, but does not log out the client that calls this function.
+
+Arguments
+callback Function
+Optional callback. Called with no arguments on success, or with a single Error argument on failure.
+
+For example, when called in a user's browser, connections in that browser remain logged in, but any other browsers or DDP clients logged in as that user will be logged out.Meteor.loginWithPassword(user, password, [callback]) Client
 
 Log the user in with a password.
 
@@ -128,6 +136,12 @@ New users with an email address will receive an address verification email.
 
 forbidClientAccountCreation Boolean
 Calls to createUser from the client will be rejected. In addition, if you are using accounts-ui, the "Create account" link will not be available.
+
+restrictCreationByEmailDomain String Or Function
+If set, only allow new users with an email in the specified domain or if the predicate function returns true. Works with password-based sign-in and external services that expose email addresses (Google, Facebook, GitHub). All existing users still can log in after enabling this option. Example: Accounts.config({ restrictCreationByEmailDomain: 'school.edu' }).
+
+loginExpirationInDays Number
+The number of days from when a user logs in until their token expires and they are logged out. Defaults to 90. Set to null to disable login expiration.
 
 Accounts.ui.config(options) Client
 

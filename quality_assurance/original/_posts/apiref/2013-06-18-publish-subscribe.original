@@ -9,7 +9,7 @@ Name of the attribute set. If null, the set has no name, and the record set is a
 func Function
 Function called on the server each time a client subscribes. Inside the function, this is the publish handler object, described below. If the client passed arguments to subscribe, the function is called with the same arguments.
 
-To publish records to clients, call Meteor.publish on the server with two parameters: the name of the record set, and a publish function that Meteor will call each time a client subscribes to the name.Publish functions can return a Collection.Cursor, in which case Meteor will publish that cursor's documents. You can also return an array of Collection.Cursors, in which case Meteor will publish all of the cursors.If you return multiple cursors in an array, they currently must all be from different collections. We hope to lift this restriction in a future release.
+To publish records to clients, call Meteor.publish on the server with two parameters: the name of the record set, and a publish function that Meteor will call each time a client subscribes to the name.Publish functions can return a Collection.Cursor, in which case Meteor will publish that cursor's documents to each subscribed client. You can also return an array of Collection.Cursors, in which case Meteor will publish all of the cursors.If you return multiple cursors in an array, they currently must all be from different collections. We hope to lift this restriction in a future release.
 
 // server: publish the rooms collection, minus secret info.
 Meteor.publish("rooms", function () {
@@ -31,7 +31,7 @@ Meteor.publish("roomAndMessages", function (roomId) {
     Messages.find({roomId: roomId})
   ];
 });
-Otherwise, the publish function should call the functions added (when a new document is added to the published record set), changed (when some fields on a document in the record set are changed or cleared), and removed (when documents are removed from the published record set) to inform subscribers about documents. These methods are provided by this in your publish function.Example:// server: publish the current size of a collection
+Alternatively, a publish function can directly control its published record set by calling the functions added (to add a new document to the published record set), changed (to change or clear some fields on a document already in the published record set), and removed (to remove documents from the published record set). Publish functions that use these functions should also call ready once the initial record set is complete. These methods are provided by this in your publish function.Example:// server: publish the current size of a collection
 Meteor.publish("counts-by-room", function (roomId) {
   var self = this;
   check(roomId, String);

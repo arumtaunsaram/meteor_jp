@@ -27,8 +27,7 @@ ref-official:
   <dt>原文: <a href="http://docs.meteor.com/#publishandsubscribe">http://docs.meteor.com/#publishandsubscribe</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終確認 2013/08/31 (JST) - 最新バージョンが0.6.5.1 の時点での内容]</li>
-    <li>[訳文の最終更新 2013/06/22 (JST) - 最新バージョンが0.6.4 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/10/14 (JST) - 最新バージョンが0.6.6.1 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -51,7 +50,7 @@ __サーバサイド__
 
 レコードをクライアントに publish するには、サーバサイドにて上記2つの引数とともに `Meteor.publish` を呼び出してください。引数にはデータに対する名前、Meteor がクライアントからその名前で subscribe を呼び出すときに実行する publish 用の関数を指定してください。
 
-publish 用の関数は `Collection.Cursor` を返却することができ、その場合、 Meteor はそのカーソラが指すドキュメントを publish します。`Collection.Cursor` の配列を返却することもでき、その場合 Meteor は全てのカーソラを publish します。
+publish 用の関数は `Collection.Cursor` を返却することができ、その場合、 Meteor はそのカーソラが指すドキュメントをサブスクライブを行うクライアントに publish します。`Collection.Cursor` の配列を返却することもでき、その場合 Meteor は全てのカーソラを publish します。
 
 **複数のカーソラを配列で返す場合、現在は全てのカーソラは異なるコレクション由来のものである必要があります。将来のリリースではこの制約は解消させる予定です**
 
@@ -79,7 +78,7 @@ Meteor.publish("roomAndMessages", function (roomId) {
 
 ~~~
 
-上記の様な使い方以外では、publish 関数は (新たたにドキュメントが publish しているドキュメントに追加された場合) `added` 関数を、(割り当てたデータ内のドキュメントが変更あるいは消去された場合) `changed`を、(ドキュメントが publish しているレコードから消去された場合) `removed` 関数をドキュメントについて subscribe を行なっている対象に対し通知するために呼ぶべきです。これらの関数は関数の中で `this` より参照できる領域に提供されています。
+他にも、publish 関数は (publish されたレコードセットに対しての追加に設定された) added 、(既にレコードセットに publish されたドキュメントに対する変更やフィールドの削除に設定された) changed 、そして (publish されたレコードセットからのドキュメントの削除に設定された) remove 関数の呼び出しにより設定された publish されたレコードを直接操作することができます。
 
 例:
 
