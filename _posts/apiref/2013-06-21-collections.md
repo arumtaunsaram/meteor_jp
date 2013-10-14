@@ -17,7 +17,7 @@ Meteor はデータをコレクションに保存します。はじめに `new M
     *   [collection.findOne](#Meteor_collection_findOne)
     *   [collection.insert](#Meteor_collection_insert)
     *   [collection.update](#Meteor_collection_update)
-    *   [collection.upsert](#Meteor_collection_upsert)
+    *   [collection.upsert](#meteor_collection_upsert)
     *   [collection.remove](#Meteor_collection_remove)
     *   [collection.allow](#Meteor_collection_allow)
     *   [collection.deny](#Meteor_collection_deny)
