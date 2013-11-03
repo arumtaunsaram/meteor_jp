@@ -3,6 +3,11 @@
 SCRIPT_DIR=$(dirname $0)
 FIRST_FLAG=$1
 
+echo ""
+echo "  To compare with the latest documents, you might need to clear caches on phantomjs."
+echo "  In detail: https://groups.google.com/forum/#!msg/phantomjs/OCGcXMeM-PA/LSj43o9jlw8J"
+echo ""
+
 if [ "$FIRST_FLAG" == "update" ]; then
 	echo "You gave 'update' option, it will overwrite the existing .original files. Continue? [Y/n]: "
 	read -r input

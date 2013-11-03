@@ -48,6 +48,6 @@ Meteor.settings contains any deployment-specific options that were provided usin
 
 Meteor.release Anywhere
 
-Meteor.release is a string containing the name of the release with which the project was built (for example, "0.6.6.1"). It is undefined if the project was built using a git checkout of Meteor.
+Meteor.release is a string containing the name of the release with which the project was built (for example, "0.6.6.2"). It is undefined if the project was built using a git checkout of Meteor.
 
 
