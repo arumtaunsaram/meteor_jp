@@ -56,7 +56,7 @@ $ meteor
 ### leaderboard.html
 
 2つの [Handlebars](http://handlebarsjs.com/) テンプレートより構成されています。
-[Template オブジェクト]({% post_url 2013-05-01-template-object %})
+[Template オブジェクト]({{ site.url }}/apiref/template-object.html)
 
 ### leaderboard.js
 
