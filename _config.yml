@@ -7,7 +7,7 @@ pygments: true
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
 
-url: https://arumtaunsaram.github.io/meteor_jp
+url: http://arumtaunsaram.github.io/meteor_jp
 host: arumtaunsaram.github.io
 baseurl: /meteor_jp/
 github: https://github.com/arumtaunsaram/meteor_jp/
