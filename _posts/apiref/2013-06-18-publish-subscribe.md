@@ -21,14 +21,14 @@ ref-official:
     *   [this.onStop](#meteor_publish_this_onStop)
     *   [this.error](#meteor_publish_this_error)
     *   [this.stop](#meteor_publish_this_stop)
-*   [Meteor.subscribe ](#meteor_subscribe)
+    *   [this.connection](#meteor_publish_this_connection)
+*   [Meteor.subscribe](#meteor_subscribe)
 
 <dl>
   <dt>原文: <a href="http://docs.meteor.com/#publishandsubscribe">http://docs.meteor.com/#publishandsubscribe</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終確認 2013/11/03 (JST) - 最新バージョンが0.6.6.2 の時点での内容]</li>
-    <li>[訳文の最終更新 2013/10/14 (JST) - 最新バージョンが0.6.6.1 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/12/23 (JST) - 最新バージョンが0.7.0.1 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -242,12 +242,19 @@ __サーバサイド__
 
 publish 関数の中で呼び出して下さい。クライアントの subscribe を停止し、クライアントサイドにて `Meteor.subscribe` に渡された `onError` コールバックがあれば発火します。`error` が `Meteor.Error` 型でなければサニタイズされます。
 
-
+---
 <a name="meteor_publish_this_stop"></a>
 ### _this_.stop()
 __サーバサイド__
 
 publish 関数の中で呼び出して下さい。クライアントの subscribe を停止します。クライアントサイドの `onError` コールバックは実行されません。
+
+---
+<a name="meteor_publish_this_connection"></a>
+### _this_.connection
+__サーバサイド__
+
+publish 関数の中で呼び出してください。この subscribe を行っている接続をさします。
 
 ---
 <a name="meteor_subscribe"></a>

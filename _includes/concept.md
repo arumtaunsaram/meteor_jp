@@ -20,7 +20,7 @@
   <dt>原文: <a href="http://docs.meteor.com/#concepts">http://docs.meteor.com/#concepts</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/11/03 (JST) - 最新バージョンが0.6.6.2 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/12/23 (JST) - 最新バージョンが0.7.0.1 の時点での内容]</li>
   </ul>
   </dd>
 </dl>
@@ -491,7 +491,7 @@ $ meteor deploy www.myapp.com
 $ meteor bundle myapp.tgz
 {% endhighlight %}
 
-<p>このコマンドは tarball の形ですべてを含んだ Node.js のアプリケーションを生成します。このアプリケーションを運用するにあたり、Node.js 0.10 と MongoDB サーバを用意する必要があります(現在の Meteor のリリースは Node 0.10.21 上にてテストを行っています) 。その後、アプリケーションが待機 (リッスン) する HTTP ポートと MongoDB のエンドポイントを指定し node を実行すると アプリケーションを実行することができます。もし MongoDB サーバをまだ用意していないのであれば、<a href="http://mongohq.com/">MongoHQ</a> のMeteor 開発チームのパートナをおすすめすめできます。</p>
+<p>このコマンドは tarball の形ですべてを含んだ Node.js のアプリケーションを生成します。このアプリケーションを運用するにあたり、Node.js 0.10 と MongoDB サーバを用意する必要があります(現在の Meteor のリリースは Node 0.10.22 上にてテストを行っており、0.10.22 から 0.10.24 のみ利用することをすすめます) 。その後、アプリケーションが待機 (リッスン) する HTTP ポートと MongoDB のエンドポイントを指定し node を実行すると アプリケーションを実行することができます。もし MongoDB サーバをまだ用意していないのであれば、<a href="http://mongohq.com/">MongoHQ</a> のMeteor 開発チームのパートナをおすすめすめできます。</p>
 
 {% highlight bash %}
 $ PORT=3000 MONGO_URL=mongodb://localhost:27017/myapp node bundle/main.js

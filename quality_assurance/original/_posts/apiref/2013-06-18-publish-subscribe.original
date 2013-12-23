@@ -142,6 +142,10 @@ this.stop() Server
 
 Call inside the publish function. Stops this client's subscription; the onError callback is not invoked on the client.
 
+this.connection Server
+
+Access inside the publish function. The incoming connection for this subscription.
+
 Meteor.subscribe(name [, arg1, arg2, ... ] [, callbacks]) Client
 
 Subscribe to a record set. Returns a handle that provides stop() and ready() methods.

@@ -11,7 +11,7 @@ ref-official:
   <dt>原文: <a href="http://meteor.com/examples/parties">http://meteor.com/examples/parties</a><dt>
   <dd>
   <ul>
-    <li>[訳文の最終更新 2013/11/03 (JST) - 最新バージョンが0.6.6.2 の時点での内容]</li>
+    <li>[訳文の最終更新 2013/12/23 (JST) - 最新バージョンが0.7.0.1 の時点での内容]</li>
     <li>[訳文の最終更新 2013/06/14 - 最新バージョンが0.6.4 の時点での内容]</li>
   </ul>
   </dd>

@@ -25,6 +25,7 @@ Calling methods on the server defines functions that can be called remotely by c
 unblock: when called, allows the next method from this client to begin running.
 userId: the id of the current user.
 setUserId: a function that associates the current client with a user.
+connection: on the server, the connection this method call was received on.
 Calling methods on the client defines stub functions associated with server methods of the same name. You don't have to define a stub for your method if you don't want to. In that case, method calls are just like remote procedure calls in other systems, and you'll have to wait for the results from the server.If you do define a stub, when a client invokes a server method it will also run its stub in parallel. On the client, the return value of a stub is ignored. Stubs are run for their side-effects: they are intended to simulate the result of what the server's method will do, but without waiting for the round trip delay. If a stub throws an exception it will be logged to the console.You use methods all the time, because the database mutators (insert, update, remove) are implemented as methods. When you call any of these functions on the client, you're invoking their stub version that update the local cache, and sending the same write request to the server. When the server responds, the client updates the local cache with the writes that actually occurred on the server.this.userId Anywhere
 
 The id of the user that made this method call, or null if no user was logged in.
@@ -45,7 +46,11 @@ this.unblock() Server
 
 Call inside a method invocation. Allow subsequent method from this client to begin running in a new fiber.
 
-On the server, methods from a given client run one at a time. The N+1th invocation from a client won't start until the Nth invocation returns. However, you can change this by calling this.unblock. This will allow the N+1th invocation to start running in a new fiber.new Meteor.Error(error, reason, details) Anywhere
+On the server, methods from a given client run one at a time. The N+1th invocation from a client won't start until the Nth invocation returns. However, you can change this by calling this.unblock. This will allow the N+1th invocation to start running in a new fiber.this.connection Server
+
+Access inside a method invocation. The connection this method was received on. null if the method is not associated with a connection, eg. a server initiated method call.
+
+new Meteor.Error(error, reason, details) Anywhere
 
 This class represents a symbolic error thrown by a method.
 
